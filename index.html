@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>쉽게 쉽게 가자 · 걷기대회</title>
+<title>쉽게 쉽게 걷자 · 걷기대회</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -167,6 +167,22 @@
   .vote-btn:disabled{cursor:default;opacity:0.9;}
   .vote-count{background:#fff;border-radius:10px;padding:1px 7px;font-size:0.78rem;color:var(--brick);}
   .vote-btn.voted .vote-count{background:rgba(255,255,255,0.35);color:#fff;}
+  .vote-cancel{
+    margin-top:8px;
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:0.8rem;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+  }
+  .radio-row{display:flex;gap:16px;margin-top:4px;}
+  .radio-opt{display:flex;align-items:center;gap:6px;font-weight:400;color:var(--ink);font-size:0.92rem;margin:0;}
+  .radio-opt input{margin:0;width:auto;}
+  .course-img{width:100%;border-radius:10px;margin-top:10px;display:block;}
+  .time-row{display:flex;gap:8px;}
+  .time-row select{flex:1;}
   .note{
     font-size:0.86rem;
     color:var(--ink-soft);
@@ -297,9 +313,9 @@
 
 <header class="hero">
   <p class="pretitle">제1회 천하제일 걷기대회</p>
-  <p class="eventname">쉽게 쉽게 가자</p>
+  <p class="eventname">쉽게 쉽게 걷자</p>
   <p class="eventmeta">2026년 10월 10일(토) · 어린이대공원</p>
-  <div class="trail"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+  <div class="trail"><span class="on"></span><span></span><span></span><span></span></div>
 </header>
 
 <div class="wrap">
@@ -314,7 +330,7 @@
   <section id="panel-info" class="panel active">
     <div class="card">
       <h2>대회 소개</h2>
-      <p>바쁘고 힘든 일상에 지치셨나요? 모든것이 빠르게만 흘러가는 삶 속에서, 주변 풍경을 보며 조금은 천천히 걸어보는건 어떨까요?</p>
+      <p>바쁘고 힘든 일상에 지치셨나요?<br>모든것이 빠르게만 흘러가는 삶 속에서,<br>주변 풍경을 보며 조금은 천천히 걸어보는건 어떨까요?</p>
     </div>
 
     <div class="card">
@@ -328,27 +344,28 @@
         <li>
           <div class="flow-dot"></div>
           <p class="flow-title">쉽게 쉽게 걷자!</p>
-          <p class="flow-desc">풍경도 보고, 수다도 떨고, 각자의 속도대로 걸어요.</p>
+          <p class="flow-desc">풍경도 보고, 수다도 떨고, 각자 속도대로 걸어요.</p>
         </li>
         <li>
           <div class="flow-dot"></div>
           <p class="flow-title">누가누가 잘 걸었나!</p>
-          <p class="flow-desc">평가 및 시상 — 최다 걸음수 상, 달팽이상!</p>
+          <p class="flow-desc">걷기대회 소감 나누기와 간단한 시상이 준비되어 있어요.</p>
         </li>
         <li>
           <div class="flow-dot"></div>
           <p class="flow-title">배고픈 사람~?</p>
-          <p class="flow-desc">저녁 먹으러 가자! (멕시칼리) 투표로 메뉴를 골라볼까요?</p>
+          <p class="flow-desc">저녁 먹으러 가자! 투표로 메뉴를 골라볼까요?</p>
           <div class="vote-row" id="menu-vote">
             <button type="button" class="vote-btn" data-option="타코">🌮 타코 <span class="vote-count" data-option="타코">0</span></button>
             <button type="button" class="vote-btn" data-option="고기">🍖 고기 <span class="vote-count" data-option="고기">0</span></button>
             <button type="button" class="vote-btn" data-option="햄버거">🍔 햄버거 <span class="vote-count" data-option="햄버거">0</span></button>
           </div>
+          <button type="button" class="vote-cancel" id="vote-cancel" style="display:none;">투표 취소</button>
         </li>
         <li>
           <div class="flow-dot"></div>
-          <p class="flow-title">소환시키러 가자!</p>
-          <p class="flow-desc">19:30~20:20 열린광장 에어로빅 교실에 참여해요.</p>
+          <p class="flow-title">소화시키러 가자!</p>
+          <p class="flow-desc">열린광장 에어로빅 교실</p>
         </li>
       </ol>
     </div>
@@ -356,7 +373,8 @@
     <div class="card">
       <h2>걷기 코스</h2>
       <p>어린이대공원 외곽 산책길, 약 6km입니다.</p>
-      <div class="note">코스 지도는 준비되는 대로 이곳에 업데이트할 예정입니다.</div>
+      <img class="course-img" src="course-map.png" alt="쉽게 쉽게 걷자 걷기 코스 지도 - 어린이대공원 외곽 순환로, 약 6km">
+      <div class="note">지정된 코스로 꼭 돌지 않아도 됩니다. 가끔은 길을 잃어보는 것도 좋아요.</div>
     </div>
 
     <div class="card">
@@ -428,17 +446,45 @@
           <label for="rc-name">이름</label>
           <input type="text" id="rc-name" required>
 
-          <label for="rc-phone">연락처</label>
-          <input type="tel" id="rc-phone" placeholder="010-0000-0000" required>
-
           <label for="rc-steps">걸음수</label>
           <input type="number" id="rc-steps" min="0" placeholder="예: 9800" required>
 
-          <label for="rc-pace">속도 / 소요시간</label>
-          <input type="text" id="rc-pace" placeholder="예: 1시간 20분, 5.2km/h">
+          <label>소요시간</label>
+          <div class="time-row">
+            <select id="rc-hour">
+              <option value="0">0시간</option>
+              <option value="1">1시간</option>
+              <option value="2">2시간</option>
+              <option value="3">3시간</option>
+            </select>
+            <select id="rc-min">
+              <option value="0">0분</option>
+              <option value="10">10분</option>
+              <option value="20">20분</option>
+              <option value="30">30분</option>
+              <option value="40">40분</option>
+              <option value="50">50분</option>
+            </select>
+          </div>
+
+          <label for="rc-speed">속도</label>
+          <select id="rc-speed">
+            <option value="">선택해주세요</option>
+            <option value="3km/h 이하">3km/h 이하 (느긋하게)</option>
+            <option value="3~4km/h">3~4km/h</option>
+            <option value="4~5km/h">4~5km/h</option>
+            <option value="5~6km/h">5~6km/h</option>
+            <option value="6km/h 이상">6km/h 이상 (씩씩하게)</option>
+          </select>
 
           <label for="rc-comment">소감 한마디</label>
           <textarea id="rc-comment" placeholder="오늘 걷기 어떠셨나요?"></textarea>
+
+          <label>제2회 걷기대회에도 참여할 의향 있나요?</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="rc-again" value="예" required> 예</label>
+            <label class="radio-opt"><input type="radio" name="rc-again" value="아니오"> 아니오</label>
+          </div>
 
           <button type="submit" class="primary">기록 남기기</button>
           <div class="success-msg" id="record-success">기록이 등록되었습니다. 수고하셨습니다!</div>
@@ -470,7 +516,7 @@
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>이름</th><th>닉네임</th><th>연락처</th><th>사이즈</th><th>각오</th><th>입금확인</th><th>신청일시</th></tr></thead>
+          <thead><tr><th>이름</th><th>닉네임</th><th>연락처</th><th>사이즈</th><th>각오</th><th>입금확인</th><th>출석</th><th>신청일시</th></tr></thead>
           <tbody id="admin-participants-body"></tbody>
         </table>
       </div>
@@ -483,7 +529,7 @@
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>이름</th><th>연락처</th><th>걸음수</th><th>속도</th><th>소감</th><th>등록일시</th></tr></thead>
+          <thead><tr><th>이름</th><th>걸음수</th><th>소요시간/속도</th><th>소감</th><th>재참여의향</th><th>등록일시</th></tr></thead>
           <tbody id="admin-records-body"></tbody>
         </table>
       </div>
@@ -492,7 +538,7 @@
 </div>
 
 <footer>
-  © 쉽게 쉽게 가자 준비팀 · <a id="adminLink">관리자</a>
+  © 쉽게 쉽게 걷자 준비팀 · <a id="adminLink">관리자</a>
 </footer>
 
 <!-- Firebase (dodgeball-efbff 프로젝트 재사용) -->
@@ -523,7 +569,7 @@ function showTab(id){
   document.getElementById('nav-'+id).classList.add('active');
   const dots = document.querySelectorAll('.trail span');
   const idx = TRAIL_ORDER.indexOf(id);
-  dots.forEach((d,i)=> d.classList.toggle('on', i<=idx && idx<3 ? i<=idx : i===dots.length-1));
+  dots.forEach((d,i)=> d.classList.toggle('on', i === idx));
 }
 
 // ---------- 유틸 ----------
@@ -598,12 +644,19 @@ document.getElementById('forceOpenToggle').addEventListener('change', function()
 // ---------- 걷기 기록: 제출 ----------
 document.getElementById('recordForm').addEventListener('submit', function(e){
   e.preventDefault();
+  const hour = document.getElementById('rc-hour').value;
+  const min = document.getElementById('rc-min').value;
+  const speed = document.getElementById('rc-speed').value;
+  const paceParts = [];
+  if(Number(hour) > 0 || Number(min) > 0) paceParts.push(`${hour}시간 ${min}분`);
+  if(speed) paceParts.push(speed);
+  const againEl = document.querySelector('input[name="rc-again"]:checked');
   const data = {
     name: document.getElementById('rc-name').value.trim(),
-    phone: document.getElementById('rc-phone').value.trim(),
     steps: Number(document.getElementById('rc-steps').value) || 0,
-    pace: document.getElementById('rc-pace').value.trim(),
+    pace: paceParts.join(' · '),
     comment: document.getElementById('rc-comment').value.trim(),
+    again: againEl ? againEl.value : '',
     createdAt: firebase.database.ServerValue.TIMESTAMP
   };
   db.ref(ROOT + '/records').push(data)
@@ -642,22 +695,40 @@ db.ref(ROOT + '/menuVotes').on('value', snap => {
     document.querySelectorAll(`.vote-count[data-option="${opt}"]`).forEach(el => el.textContent = val[opt] || 0);
   });
 });
-function markVoted(opt){
+function currentVote(){ return localStorage.getItem('walk2026_voted'); }
+function refreshVoteUI(){
+  const voted = currentVote();
   document.querySelectorAll('.vote-btn').forEach(b => {
-    b.disabled = true;
-    if(b.dataset.option === opt) b.classList.add('voted');
+    b.classList.toggle('voted', b.dataset.option === voted);
   });
+  const cancelBtn = document.getElementById('vote-cancel');
+  if(cancelBtn) cancelBtn.style.display = voted ? 'inline-flex' : 'none';
 }
 document.querySelectorAll('.vote-btn').forEach(btn => {
   btn.addEventListener('click', function(){
-    if(localStorage.getItem('walk2026_voted')) return;
     const opt = this.dataset.option;
+    const prev = currentVote();
+    if(prev === opt) return;
+    if(prev){
+      db.ref(ROOT + '/menuVotes/' + prev).transaction(v => Math.max((v || 0) - 1, 0));
+    }
     db.ref(ROOT + '/menuVotes/' + opt).transaction(v => (v || 0) + 1);
     localStorage.setItem('walk2026_voted', opt);
-    markVoted(opt);
+    refreshVoteUI();
   });
 });
-if(localStorage.getItem('walk2026_voted')) markVoted(localStorage.getItem('walk2026_voted'));
+const voteCancelBtn = document.getElementById('vote-cancel');
+if(voteCancelBtn){
+  voteCancelBtn.addEventListener('click', function(){
+    const prev = currentVote();
+    if(prev){
+      db.ref(ROOT + '/menuVotes/' + prev).transaction(v => Math.max((v || 0) - 1, 0));
+    }
+    localStorage.removeItem('walk2026_voted');
+    refreshVoteUI();
+  });
+}
+refreshVoteUI();
 
 // ---------- 참가자들의 각오 (말풍선) ----------
 const PERSON_EMOJIS = ['🧑','👩','👨','🧔','👧','👦','🧓','👵','👴','🧑\u200d🦱','👩\u200d🦰','👨\u200d🦳'];
@@ -669,30 +740,38 @@ function emojiFor(key){
 function renderMindsetFeed(){
   const feed = document.getElementById('mindset-feed');
   if(!feed) return;
-  const withMindset = latestParticipants.filter(p => p.mindset && p.mindset.trim());
-  if(withMindset.length === 0){
-    feed.innerHTML = '<p class="note">아직 등록된 각오가 없습니다.</p>';
-    return;
+  try{
+    const withMindset = latestParticipants.filter(p => p.mindset && String(p.mindset).trim());
+    if(withMindset.length === 0){
+      feed.innerHTML = '<p class="note">아직 등록된 각오가 없습니다.</p>';
+      return;
+    }
+    feed.innerHTML = withMindset
+      .slice()
+      .sort((a,b)=> (Number(b.createdAt)||0) - (Number(a.createdAt)||0))
+      .map(p => `
+        <div class="bubble-item">
+          <div class="bubble-emoji">${emojiFor(String(p.key || p.name || ''))}</div>
+          <div class="bubble-box">
+            <span class="bubble-nick">${escapeHtml(p.nickname || p.name)}</span>
+            ${escapeHtml(p.mindset)}
+          </div>
+        </div>`).join('');
+  } catch(err){
+    console.error('renderMindsetFeed error:', err);
   }
-  feed.innerHTML = withMindset
-    .slice()
-    .sort((a,b)=> (b.createdAt||0) - (a.createdAt||0))
-    .map(p => `
-      <div class="bubble-item">
-        <div class="bubble-emoji">${emojiFor(p.key)}</div>
-        <div class="bubble-box">
-          <span class="bubble-nick">${escapeHtml(p.nickname || p.name)}</span>
-          ${escapeHtml(p.mindset)}
-        </div>
-      </div>`).join('');
 }
 
 // ---------- 관리자 ----------
 document.getElementById('adminLink').addEventListener('click', function(e){
   e.preventDefault();
   if(sessionStorage.getItem('isAdmin') === 'true'){
-    unlockAdmin();
-    showTab('admin');
+    const exit = confirm('일반 모드로 돌아가시겠습니까?');
+    if(exit){
+      sessionStorage.removeItem('isAdmin');
+      document.getElementById('nav-admin').style.display = 'none';
+      showTab('info');
+    }
     return;
   }
   const pw = prompt('관리자 비밀번호를 입력하세요.');
@@ -730,13 +809,16 @@ function renderAdminStats(){
   const total = latestParticipants.length;
   const sizeCounts = {S:0,M:0,L:0,XL:0};
   let paid = 0;
+  let attended = 0;
   latestParticipants.forEach(p=>{
     if(sizeCounts[p.size] !== undefined) sizeCounts[p.size]++;
     if(p.paymentConfirmed) paid++;
+    if(p.attended) attended++;
   });
   const chips = [
     `총 신청 ${total}명`,
     `입금확인 ${paid} / 미확인 ${total - paid}`,
+    `출석 ${attended} / ${total}`,
     `S ${sizeCounts.S} · M ${sizeCounts.M} · L ${sizeCounts.L} · XL ${sizeCounts.XL}`
   ];
   document.getElementById('admin-stats').innerHTML = chips.map(c => `<span class="stat-chip">${c}</span>`).join('');
@@ -755,11 +837,15 @@ function renderAdminParticipants(){
         <td>${escapeHtml(p.size)}</td>
         <td>${escapeHtml(p.mindset)}</td>
         <td><input type="checkbox" ${p.paymentConfirmed ? 'checked' : ''} onchange="togglePaid('${p.key}', this.checked)"></td>
+        <td><input type="checkbox" ${p.attended ? 'checked' : ''} onchange="toggleAttended('${p.key}', this.checked)"></td>
         <td>${fmtDate(p.createdAt)}</td>
       </tr>`).join('');
 }
 function togglePaid(key, checked){
   db.ref(ROOT + '/participants/' + key + '/paymentConfirmed').set(checked);
+}
+function toggleAttended(key, checked){
+  db.ref(ROOT + '/participants/' + key + '/attended').set(checked);
 }
 
 function renderAdminRecords(){
@@ -770,22 +856,22 @@ function renderAdminRecords(){
     .map(r => `
       <tr>
         <td>${escapeHtml(r.name)}</td>
-        <td>${escapeHtml(r.phone)}</td>
         <td>${r.steps ?? ''}</td>
         <td>${escapeHtml(r.pace)}</td>
         <td>${escapeHtml(r.comment)}</td>
+        <td>${escapeHtml(r.again)}</td>
         <td>${fmtDate(r.createdAt)}</td>
       </tr>`).join('');
 }
 
 function exportParticipantsCSV(){
-  const rows = [['이름','닉네임','연락처','사이즈','각오','입금확인','신청일시']];
-  latestParticipants.forEach(p => rows.push([p.name, p.nickname, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', fmtDate(p.createdAt)]));
+  const rows = [['이름','닉네임','연락처','사이즈','각오','입금확인','출석','신청일시']];
+  latestParticipants.forEach(p => rows.push([p.name, p.nickname, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', p.attended ? '출석' : '미출석', fmtDate(p.createdAt)]));
   downloadCSV('참가자명단.csv', rows);
 }
 function exportRecordsCSV(){
-  const rows = [['이름','연락처','걸음수','속도','소감','등록일시']];
-  latestRecords.forEach(r => rows.push([r.name, r.phone, r.steps, r.pace, r.comment, fmtDate(r.createdAt)]));
+  const rows = [['이름','걸음수','소요시간/속도','소감','재참여의향','등록일시']];
+  latestRecords.forEach(r => rows.push([r.name, r.steps, r.pace, r.comment, r.again, fmtDate(r.createdAt)]));
   downloadCSV('걷기기록.csv', rows);
 }
 
