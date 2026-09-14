@@ -36,6 +36,14 @@
     padding:44px 20px 28px;
     text-align:center;
   }
+  header.hero .pretitle{
+    font-family:'Jua',sans-serif;
+    font-weight:400;
+    font-size:clamp(1.1rem,3vw,1.5rem);
+    color:var(--brick);
+    letter-spacing:0.3px;
+    margin:0 0 6px;
+  }
   header.hero .eventname{
     font-family:'Jua',sans-serif;
     font-size:clamp(2.2rem,7vw,3.4rem);
@@ -111,19 +119,54 @@
   }
   .card p{margin:0 0 10px;color:var(--ink);}
   .card ul{margin:0;padding-left:0;list-style:none;}
-  .schedule li{
-    display:flex;
-    gap:14px;
-    padding:9px 0;
-    border-bottom:1px dashed var(--line);
-    font-size:0.95rem;
+  .flow{list-style:none;margin:0;padding:0;}
+  .flow li{position:relative;padding:0 0 26px 26px;}
+  .flow li:last-child{padding-bottom:0;}
+  .flow li::before{
+    content:'';
+    position:absolute;
+    left:5px;top:14px;bottom:-12px;
+    width:2px;
+    background:var(--line);
   }
-  .schedule li:last-child{border-bottom:none;}
-  .schedule time{
-    flex:0 0 96px;
+  .flow li:last-child::before{display:none;}
+  .flow-dot{
+    position:absolute;
+    left:0;top:4px;
+    width:12px;height:12px;
+    border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 3px var(--bg-alt);
+  }
+  .flow-title{
+    font-family:'Jua',sans-serif;
+    font-weight:400;
+    font-size:1.05rem;
+    color:var(--green-dark);
+    margin:0 0 4px;
+  }
+  .flow-desc{
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .vote-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .vote-btn{
+    display:flex;align-items:center;gap:6px;
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:7px 12px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:0.85rem;
     font-weight:700;
-    color:var(--brick);
+    color:var(--green-dark);
+    cursor:pointer;
   }
+  .vote-btn.voted{background:var(--amber);color:#fff;border-color:var(--amber);}
+  .vote-btn:disabled{cursor:default;opacity:0.9;}
+  .vote-count{background:#fff;border-radius:10px;padding:1px 7px;font-size:0.78rem;color:var(--brick);}
+  .vote-btn.voted .vote-count{background:rgba(255,255,255,0.35);color:#fff;}
   .note{
     font-size:0.86rem;
     color:var(--ink-soft);
@@ -169,6 +212,7 @@
     cursor:pointer;
   }
   button.primary:hover{background:var(--green-dark);}
+  button.primary:disabled{background:var(--line);color:var(--ink-soft);cursor:not-allowed;}
   button.ghost{
     background:none;
     border:1px solid var(--line);
@@ -212,6 +256,18 @@
   .feed-item .who{font-weight:700;color:var(--green-dark);}
   .feed-item .stat{color:var(--brick);font-size:0.82rem;margin-top:2px;}
 
+  .bubble-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+  .bubble-item:last-child{margin-bottom:0;}
+  .bubble-emoji{font-size:1.6rem;line-height:1;}
+  .bubble-box{
+    background:var(--bg-alt);
+    border-radius:14px;
+    border-top-left-radius:4px;
+    padding:10px 14px;
+    font-size:0.9rem;
+  }
+  .bubble-nick{font-weight:700;color:var(--green-dark);margin-bottom:2px;display:block;font-size:0.85rem;}
+
   table{width:100%;border-collapse:collapse;font-size:0.84rem;}
   th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;}
   th{color:var(--green-dark);}
@@ -240,6 +296,7 @@
 <body>
 
 <header class="hero">
+  <p class="pretitle">제1회 천하제일 걷기대회</p>
   <p class="eventname">쉽게 쉽게 가자</p>
   <p class="eventmeta">2026년 10월 10일(토) · 어린이대공원</p>
   <div class="trail"><span class="on"></span><span></span><span></span><span></span><span></span></div>
@@ -257,33 +314,59 @@
   <section id="panel-info" class="panel active">
     <div class="card">
       <h2>대회 소개</h2>
-      <p>빨리 걷지 않아도 괜찮습니다. "쉽게 쉽게 가자"는 어린이대공원 둘레길을 함께 걸으며 서로의 안부를 나누는 자리입니다. 완주보다 함께 걷는 시간에 의미를 두고, 걷기가 끝나면 맛있는 저녁과 가벼운 에어로빅으로 하루를 마무리합니다.</p>
+      <p>바쁘고 힘든 일상에 지치셨나요? 모든것이 빠르게만 흘러가는 삶 속에서, 주변 풍경을 보며 조금은 천천히 걸어보는건 어떨까요?</p>
     </div>
 
     <div class="card">
       <h2>프로그램 일정</h2>
-      <ul class="schedule">
-        <li><time>15:00~</time><span>걷기대회 (어린이대공원 아웃코스+인코스)</span></li>
-        <li><time>16:00~</time><span>평가 및 시상</span></li>
-        <li><time>17:00~</time><span>저녁식사 (멕시칼리)</span></li>
-        <li><time>19:30~20:20</time><span>열린광장 에어로빅</span></li>
-      </ul>
+      <ol class="flow">
+        <li>
+          <div class="flow-dot"></div>
+          <p class="flow-title">친구들아 모여라!</p>
+          <p class="flow-desc">15:00까지 어린이대공원 정문으로 모여주세요.</p>
+        </li>
+        <li>
+          <div class="flow-dot"></div>
+          <p class="flow-title">쉽게 쉽게 걷자!</p>
+          <p class="flow-desc">풍경도 보고, 수다도 떨고, 각자의 속도대로 걸어요.</p>
+        </li>
+        <li>
+          <div class="flow-dot"></div>
+          <p class="flow-title">누가누가 잘 걸었나!</p>
+          <p class="flow-desc">평가 및 시상 — 최다 걸음수 상, 달팽이상!</p>
+        </li>
+        <li>
+          <div class="flow-dot"></div>
+          <p class="flow-title">배고픈 사람~?</p>
+          <p class="flow-desc">저녁 먹으러 가자! (멕시칼리) 투표로 메뉴를 골라볼까요?</p>
+          <div class="vote-row" id="menu-vote">
+            <button type="button" class="vote-btn" data-option="타코">🌮 타코 <span class="vote-count" data-option="타코">0</span></button>
+            <button type="button" class="vote-btn" data-option="고기">🍖 고기 <span class="vote-count" data-option="고기">0</span></button>
+            <button type="button" class="vote-btn" data-option="햄버거">🍔 햄버거 <span class="vote-count" data-option="햄버거">0</span></button>
+          </div>
+        </li>
+        <li>
+          <div class="flow-dot"></div>
+          <p class="flow-title">소환시키러 가자!</p>
+          <p class="flow-desc">19:30~20:20 열린광장 에어로빅 교실에 참여해요.</p>
+        </li>
+      </ol>
     </div>
 
     <div class="card">
       <h2>걷기 코스</h2>
-      <p>어린이대공원 아웃코스 + 인코스, 총 약 7km입니다.</p>
+      <p>어린이대공원 외곽 산책길, 약 6km입니다.</p>
       <div class="note">코스 지도는 준비되는 대로 이곳에 업데이트할 예정입니다.</div>
     </div>
 
     <div class="card">
-      <h2>시상 내용</h2>
-      <p>완주하신 모든 분께 참가상을 드리며, 기록 우수자 시상 내용은 추후 별도 공지합니다.</p>
+      <h3>준비물</h3>
+      <p>편안한 복장과 신발<br><span style="color:var(--ink-soft);font-size:0.88rem;">* 단체티와 손수건 증정</span></p>
     </div>
 
     <div class="card">
-      <h3>준비물</h3>
-      <p>단체티와 손수건은 준비팀에서 제작해 드립니다. 개인적으로는 편안한 복장과 신발만 챙겨오시면 됩니다. (여유가 되면 식수도 제공할 예정입니다.)</p>
+      <h2>참가자들의 각오</h2>
+      <div id="mindset-feed"><p class="note">아직 등록된 각오가 없습니다.</p></div>
     </div>
   </section>
 
@@ -292,6 +375,7 @@
     <div class="card">
       <h2>참가 신청</h2>
       <div class="payinfo">
+        단체티 제작을 위해 소정의 참가비를 받습니다.<br>
         참가비는 <b>20,000원</b>이며, 아래 계좌로 입금해주세요.<br>
         <b>[은행명] [예금주] [계좌번호]</b> ※ 실제 입금 계좌 정보로 교체해주세요.<br>
         신청 후 <b>불참 시 참가비는 환불되지 않습니다.</b>
@@ -300,6 +384,9 @@
       <form id="applyForm">
         <label for="ap-name">이름</label>
         <input type="text" id="ap-name" required>
+
+        <label for="ap-nickname">닉네임</label>
+        <input type="text" id="ap-nickname" placeholder="대회안내 페이지에 공개될 닉네임" required>
 
         <label for="ap-phone">연락처</label>
         <input type="tel" id="ap-phone" placeholder="010-0000-0000" required>
@@ -321,7 +408,7 @@
           <label for="ap-agree" style="margin:0;font-weight:400;color:inherit;">참가비 입금 후 불참 시 환불되지 않는다는 점에 동의합니다.</label>
         </div>
 
-        <button type="submit" class="primary">신청하기</button>
+        <button type="submit" class="primary" id="apply-submit" disabled>신청하기</button>
         <div class="success-msg" id="apply-success">신청이 완료되었습니다. 안내드린 계좌로 참가비를 입금해주세요!</div>
       </form>
     </div>
@@ -383,7 +470,7 @@
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>이름</th><th>연락처</th><th>사이즈</th><th>각오</th><th>입금확인</th><th>신청일시</th></tr></thead>
+          <thead><tr><th>이름</th><th>닉네임</th><th>연락처</th><th>사이즈</th><th>각오</th><th>입금확인</th><th>신청일시</th></tr></thead>
           <tbody id="admin-participants-body"></tbody>
         </table>
       </div>
@@ -460,10 +547,14 @@ function downloadCSV(filename, rows){
 }
 
 // ---------- 참가 신청 ----------
+document.getElementById('ap-agree').addEventListener('change', function(){
+  document.getElementById('apply-submit').disabled = !this.checked;
+});
 document.getElementById('applyForm').addEventListener('submit', function(e){
   e.preventDefault();
   const data = {
     name: document.getElementById('ap-name').value.trim(),
+    nickname: document.getElementById('ap-nickname').value.trim(),
     phone: document.getElementById('ap-phone').value.trim(),
     size: document.getElementById('ap-size').value,
     mindset: document.getElementById('ap-mindset').value.trim(),
@@ -474,6 +565,7 @@ document.getElementById('applyForm').addEventListener('submit', function(e){
   db.ref(ROOT + '/participants').push(data)
     .then(()=>{
       document.getElementById('applyForm').reset();
+      document.getElementById('apply-submit').disabled = true;
       const msg = document.getElementById('apply-success');
       msg.style.display = 'block';
       setTimeout(()=> msg.style.display = 'none', 5000);
@@ -542,6 +634,59 @@ db.ref(ROOT + '/records').limitToLast(30).on('value', snap => {
     </div>`).join('');
 });
 
+// ---------- 저녁메뉴 투표 ----------
+const VOTE_OPTIONS = ['타코','고기','햄버거'];
+db.ref(ROOT + '/menuVotes').on('value', snap => {
+  const val = snap.val() || {};
+  VOTE_OPTIONS.forEach(opt => {
+    document.querySelectorAll(`.vote-count[data-option="${opt}"]`).forEach(el => el.textContent = val[opt] || 0);
+  });
+});
+function markVoted(opt){
+  document.querySelectorAll('.vote-btn').forEach(b => {
+    b.disabled = true;
+    if(b.dataset.option === opt) b.classList.add('voted');
+  });
+}
+document.querySelectorAll('.vote-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    if(localStorage.getItem('walk2026_voted')) return;
+    const opt = this.dataset.option;
+    db.ref(ROOT + '/menuVotes/' + opt).transaction(v => (v || 0) + 1);
+    localStorage.setItem('walk2026_voted', opt);
+    markVoted(opt);
+  });
+});
+if(localStorage.getItem('walk2026_voted')) markVoted(localStorage.getItem('walk2026_voted'));
+
+// ---------- 참가자들의 각오 (말풍선) ----------
+const PERSON_EMOJIS = ['🧑','👩','👨','🧔','👧','👦','🧓','👵','👴','🧑\u200d🦱','👩\u200d🦰','👨\u200d🦳'];
+function emojiFor(key){
+  let hash = 0;
+  for(let i=0;i<key.length;i++) hash = (hash*31 + key.charCodeAt(i)) >>> 0;
+  return PERSON_EMOJIS[hash % PERSON_EMOJIS.length];
+}
+function renderMindsetFeed(){
+  const feed = document.getElementById('mindset-feed');
+  if(!feed) return;
+  const withMindset = latestParticipants.filter(p => p.mindset && p.mindset.trim());
+  if(withMindset.length === 0){
+    feed.innerHTML = '<p class="note">아직 등록된 각오가 없습니다.</p>';
+    return;
+  }
+  feed.innerHTML = withMindset
+    .slice()
+    .sort((a,b)=> (b.createdAt||0) - (a.createdAt||0))
+    .map(p => `
+      <div class="bubble-item">
+        <div class="bubble-emoji">${emojiFor(p.key)}</div>
+        <div class="bubble-box">
+          <span class="bubble-nick">${escapeHtml(p.nickname || p.name)}</span>
+          ${escapeHtml(p.mindset)}
+        </div>
+      </div>`).join('');
+}
+
 // ---------- 관리자 ----------
 document.getElementById('adminLink').addEventListener('click', function(e){
   e.preventDefault();
@@ -573,6 +718,7 @@ db.ref(ROOT + '/participants').on('value', snap => {
   snap.forEach(child => latestParticipants.push({key: child.key, ...child.val()}));
   renderAdminParticipants();
   renderAdminStats();
+  renderMindsetFeed();
 });
 db.ref(ROOT + '/records').on('value', snap => {
   latestRecords = [];
@@ -604,6 +750,7 @@ function renderAdminParticipants(){
     .map(p => `
       <tr>
         <td>${escapeHtml(p.name)}</td>
+        <td>${escapeHtml(p.nickname)}</td>
         <td>${escapeHtml(p.phone)}</td>
         <td>${escapeHtml(p.size)}</td>
         <td>${escapeHtml(p.mindset)}</td>
@@ -632,8 +779,8 @@ function renderAdminRecords(){
 }
 
 function exportParticipantsCSV(){
-  const rows = [['이름','연락처','사이즈','각오','입금확인','신청일시']];
-  latestParticipants.forEach(p => rows.push([p.name, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', fmtDate(p.createdAt)]));
+  const rows = [['이름','닉네임','연락처','사이즈','각오','입금확인','신청일시']];
+  latestParticipants.forEach(p => rows.push([p.name, p.nickname, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', fmtDate(p.createdAt)]));
   downloadCSV('참가자명단.csv', rows);
 }
 function exportRecordsCSV(){
