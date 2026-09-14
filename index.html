@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쉽게 쉽게 가자 · 걷기대회</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F9F1;
+    --bg-card:#FFFFFF;
+    --bg-alt:#EEF2E6;
+    --ink:#26332B;
+    --ink-soft:#5C6B5F;
+    --green:#33613B;
+    --green-dark:#1F4026;
+    --amber:#E9A23B;
+    --amber-dark:#C67F1F;
+    --brick:#BD5B36;
+    --line:#DCE3D2;
+    --danger:#B3401F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans KR',sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 80px;}
+  header.hero{
+    padding:44px 20px 28px;
+    text-align:center;
+  }
+  header.hero .eventname{
+    font-family:'Jua',sans-serif;
+    font-size:clamp(2.2rem,7vw,3.4rem);
+    color:var(--green-dark);
+    letter-spacing:-0.5px;
+    margin:0;
+  }
+  header.hero .eventmeta{
+    margin-top:10px;
+    color:var(--ink-soft);
+    font-size:1rem;
+  }
+  .trail{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    margin:22px 0 0;
+  }
+  .trail span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--line);
+  }
+  .trail span.on{background:var(--amber);}
+
+  nav.tabs{
+    display:flex;
+    gap:4px;
+    border-bottom:1px solid var(--line);
+    margin:28px 0 24px;
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    flex:1;
+    background:none;
+    border:none;
+    font-family:'Noto Sans KR',sans-serif;
+    font-weight:700;
+    font-size:0.98rem;
+    color:var(--ink-soft);
+    padding:12px 8px;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav.tabs button.active{
+    color:var(--green-dark);
+    border-bottom-color:var(--amber);
+  }
+  nav.tabs button#nav-admin{display:none;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:22px 20px;
+    margin-bottom:16px;
+  }
+  .card h2{
+    font-family:'Jua',sans-serif;
+    font-weight:400;
+    font-size:1.35rem;
+    color:var(--green-dark);
+    margin:0 0 14px;
+  }
+  .card h3{
+    font-size:1rem;
+    margin:0 0 8px;
+    color:var(--green);
+  }
+  .card p{margin:0 0 10px;color:var(--ink);}
+  .card ul{margin:0;padding-left:0;list-style:none;}
+  .schedule li{
+    display:flex;
+    gap:14px;
+    padding:9px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:0.95rem;
+  }
+  .schedule li:last-child{border-bottom:none;}
+  .schedule time{
+    flex:0 0 96px;
+    font-weight:700;
+    color:var(--brick);
+  }
+  .note{
+    font-size:0.86rem;
+    color:var(--ink-soft);
+    background:var(--bg-alt);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-top:8px;
+  }
+
+  label{display:block;font-weight:700;font-size:0.9rem;margin:16px 0 6px;color:var(--green-dark);}
+  label:first-of-type{margin-top:0;}
+  input[type=text],input[type=tel],input[type=number],select,textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:0.95rem;
+    background:#fff;
+    color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:70px;}
+  .checkline{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin-top:18px;
+    font-size:0.88rem;
+    color:var(--ink-soft);
+  }
+  .checkline input{margin-top:3px;}
+  button.primary{
+    margin-top:20px;
+    width:100%;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:13px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    cursor:pointer;
+  }
+  button.primary:hover{background:var(--green-dark);}
+  button.ghost{
+    background:none;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 14px;
+    font-size:0.85rem;
+    font-weight:700;
+    color:var(--green-dark);
+    cursor:pointer;
+  }
+  .payinfo{
+    background:var(--bg-alt);
+    border-radius:8px;
+    padding:14px 16px;
+    margin-bottom:18px;
+    font-size:0.92rem;
+  }
+  .payinfo b{color:var(--brick);}
+  .success-msg{
+    display:none;
+    background:#EAF3EA;
+    border:1px solid var(--green);
+    color:var(--green-dark);
+    border-radius:8px;
+    padding:14px 16px;
+    font-weight:700;
+    margin-top:16px;
+    font-size:0.92rem;
+  }
+  .gate{
+    text-align:center;
+    padding:30px 16px;
+    color:var(--ink-soft);
+  }
+  .feed-item{
+    padding:12px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:0.9rem;
+  }
+  .feed-item:last-child{border-bottom:none;}
+  .feed-item .who{font-weight:700;color:var(--green-dark);}
+  .feed-item .stat{color:var(--brick);font-size:0.82rem;margin-top:2px;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;}
+  th{color:var(--green-dark);}
+  .tablewrap{overflow-x:auto;}
+  .statrow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+  .stat-chip{
+    background:var(--bg-alt);
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:0.85rem;
+    font-weight:700;
+    color:var(--green-dark);
+  }
+  .adminbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .togglerow{display:flex;align-items:center;gap:8px;font-size:0.88rem;margin-bottom:6px;}
+
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.8rem;
+    padding:30px 20px 10px;
+  }
+  footer a{color:var(--ink-soft);text-decoration:underline;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eventname">쉽게 쉽게 가자</p>
+  <p class="eventmeta">2026년 10월 10일(토) · 어린이대공원</p>
+  <div class="trail"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs">
+    <button id="nav-info" class="active" onclick="showTab('info')">대회안내</button>
+    <button id="nav-apply" onclick="showTab('apply')">참가신청</button>
+    <button id="nav-record" onclick="showTab('record')">걷기기록</button>
+    <button id="nav-admin" onclick="showTab('admin')">관리자</button>
+  </nav>
+
+  <!-- 대회안내 -->
+  <section id="panel-info" class="panel active">
+    <div class="card">
+      <h2>대회 소개</h2>
+      <p>빨리 걷지 않아도 괜찮습니다. "쉽게 쉽게 가자"는 어린이대공원 둘레길을 함께 걸으며 서로의 안부를 나누는 자리입니다. 완주보다 함께 걷는 시간에 의미를 두고, 걷기가 끝나면 맛있는 저녁과 가벼운 에어로빅으로 하루를 마무리합니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>프로그램 일정</h2>
+      <ul class="schedule">
+        <li><time>15:00~</time><span>걷기대회 (어린이대공원 아웃코스+인코스)</span></li>
+        <li><time>16:00~</time><span>평가 및 시상</span></li>
+        <li><time>17:00~</time><span>저녁식사 (멕시칼리)</span></li>
+        <li><time>19:30~20:20</time><span>열린광장 에어로빅</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>걷기 코스</h2>
+      <p>어린이대공원 아웃코스 + 인코스, 총 약 7km입니다.</p>
+      <div class="note">코스 지도는 준비되는 대로 이곳에 업데이트할 예정입니다.</div>
+    </div>
+
+    <div class="card">
+      <h2>시상 내용</h2>
+      <p>완주하신 모든 분께 참가상을 드리며, 기록 우수자 시상 내용은 추후 별도 공지합니다.</p>
+    </div>
+
+    <div class="card">
+      <h3>준비물</h3>
+      <p>단체티와 손수건은 준비팀에서 제작해 드립니다. 개인적으로는 편안한 복장과 신발만 챙겨오시면 됩니다. (여유가 되면 식수도 제공할 예정입니다.)</p>
+    </div>
+  </section>
+
+  <!-- 참가신청 -->
+  <section id="panel-apply" class="panel">
+    <div class="card">
+      <h2>참가 신청</h2>
+      <div class="payinfo">
+        참가비는 <b>20,000원</b>이며, 아래 계좌로 입금해주세요.<br>
+        <b>[은행명] [예금주] [계좌번호]</b> ※ 실제 입금 계좌 정보로 교체해주세요.<br>
+        신청 후 <b>불참 시 참가비는 환불되지 않습니다.</b>
+      </div>
+
+      <form id="applyForm">
+        <label for="ap-name">이름</label>
+        <input type="text" id="ap-name" required>
+
+        <label for="ap-phone">연락처</label>
+        <input type="tel" id="ap-phone" placeholder="010-0000-0000" required>
+
+        <label for="ap-size">단체티 사이즈</label>
+        <select id="ap-size" required>
+          <option value="">선택해주세요</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+        </select>
+
+        <label for="ap-mindset">각오 한마디</label>
+        <textarea id="ap-mindset" placeholder="이번 걷기대회, 어떤 마음으로 참여하시나요?"></textarea>
+
+        <div class="checkline">
+          <input type="checkbox" id="ap-agree" required>
+          <label for="ap-agree" style="margin:0;font-weight:400;color:inherit;">참가비 입금 후 불참 시 환불되지 않는다는 점에 동의합니다.</label>
+        </div>
+
+        <button type="submit" class="primary">신청하기</button>
+        <div class="success-msg" id="apply-success">신청이 완료되었습니다. 안내드린 계좌로 참가비를 입금해주세요!</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 걷기기록 -->
+  <section id="panel-record" class="panel">
+    <div id="record-gate" class="card gate" style="display:none;">
+      <h2 style="border:none;">걷기 기록</h2>
+      <p>걷기 기록 입력은 <b>2026년 10월 10일 대회 당일</b>에만 가능합니다.<br>당일에 다시 찾아주세요!</p>
+    </div>
+
+    <div id="record-open-wrap" style="display:none;">
+      <div class="card">
+        <h2>내 기록 남기기</h2>
+        <form id="recordForm">
+          <label for="rc-name">이름</label>
+          <input type="text" id="rc-name" required>
+
+          <label for="rc-phone">연락처</label>
+          <input type="tel" id="rc-phone" placeholder="010-0000-0000" required>
+
+          <label for="rc-steps">걸음수</label>
+          <input type="number" id="rc-steps" min="0" placeholder="예: 9800" required>
+
+          <label for="rc-pace">속도 / 소요시간</label>
+          <input type="text" id="rc-pace" placeholder="예: 1시간 20분, 5.2km/h">
+
+          <label for="rc-comment">소감 한마디</label>
+          <textarea id="rc-comment" placeholder="오늘 걷기 어떠셨나요?"></textarea>
+
+          <button type="submit" class="primary">기록 남기기</button>
+          <div class="success-msg" id="record-success">기록이 등록되었습니다. 수고하셨습니다!</div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>함께 걸은 이야기</h2>
+        <div id="record-feed"><p class="note">아직 등록된 기록이 없습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 관리자 -->
+  <section id="panel-admin" class="panel">
+    <div class="card">
+      <h2>참가 현황</h2>
+      <div class="statrow" id="admin-stats"></div>
+      <div class="togglerow">
+        <input type="checkbox" id="forceOpenToggle">
+        <label for="forceOpenToggle" style="margin:0;font-weight:400;">걷기 기록 입력 강제로 열기 (테스트용, 대회일 아니어도 입력 가능)</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="adminbar">
+        <h2 style="margin:0;">참가자 명단</h2>
+        <button class="ghost" onclick="exportParticipantsCSV()">CSV 다운로드</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>이름</th><th>연락처</th><th>사이즈</th><th>각오</th><th>입금확인</th><th>신청일시</th></tr></thead>
+          <tbody id="admin-participants-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="adminbar">
+        <h2 style="margin:0;">걷기 기록</h2>
+        <button class="ghost" onclick="exportRecordsCSV()">CSV 다운로드</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>이름</th><th>연락처</th><th>걸음수</th><th>속도</th><th>소감</th><th>등록일시</th></tr></thead>
+          <tbody id="admin-records-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  © 쉽게 쉽게 가자 준비팀 · <a id="adminLink">관리자</a>
+</footer>
+
+<!-- Firebase (dodgeball-efbff 프로젝트 재사용) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script>
+// ===== TODO: 아래 Firebase 설정값을 실제 값으로 교체해주세요 (dodgeball-efbff 프로젝트) =====
+const firebaseConfig = {
+  apiKey: "AIzaSyB8_ABUYRet6Qb1jlcjYGPYRSXJ4MCnRc4",
+  authDomain: "dodgeball-efbff.firebaseapp.com",
+  databaseURL: "https://dodgeball-efbff-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dodgeball-efbff",
+  storageBucket: "dodgeball-efbff.firebasestorage.app",
+  messagingSenderId: "375748754364",
+  appId: "1:375748754364:web:2a49b5137784a68c6f89b9"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const ROOT = 'walk2026'; // 이 행사 전용 경로 (기존 앱 데이터와 분리)
+const ADMIN_PW = '7979';
+
+// ---------- 탭 전환 ----------
+const TRAIL_ORDER = ['info','apply','record','admin'];
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  const dots = document.querySelectorAll('.trail span');
+  const idx = TRAIL_ORDER.indexOf(id);
+  dots.forEach((d,i)=> d.classList.toggle('on', i<=idx && idx<3 ? i<=idx : i===dots.length-1));
+}
+
+// ---------- 유틸 ----------
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmtDate(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleString('ko-KR', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+function downloadCSV(filename, rows){
+  const BOM = '\uFEFF';
+  const csv = BOM + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ---------- 참가 신청 ----------
+document.getElementById('applyForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('ap-name').value.trim(),
+    phone: document.getElementById('ap-phone').value.trim(),
+    size: document.getElementById('ap-size').value,
+    mindset: document.getElementById('ap-mindset').value.trim(),
+    refundAgreed: true,
+    paymentConfirmed: false,
+    createdAt: firebase.database.ServerValue.TIMESTAMP
+  };
+  db.ref(ROOT + '/participants').push(data)
+    .then(()=>{
+      document.getElementById('applyForm').reset();
+      const msg = document.getElementById('apply-success');
+      msg.style.display = 'block';
+      setTimeout(()=> msg.style.display = 'none', 5000);
+    })
+    .catch(err => alert('신청 중 오류가 발생했습니다: ' + err.message));
+});
+
+// ---------- 걷기 기록: 날짜 게이트 ----------
+let forceOpen = false;
+function isRecordDayKST(){
+  const kstStr = new Date().toLocaleString('en-US', {timeZone:'Asia/Seoul'});
+  const kst = new Date(kstStr);
+  return kst.getFullYear() === 2026 && kst.getMonth() === 9 && kst.getDate() === 10; // 10월(0-indexed 9) 10일
+}
+function renderRecordGate(){
+  const open = forceOpen || isRecordDayKST();
+  document.getElementById('record-gate').style.display = open ? 'none' : 'block';
+  document.getElementById('record-open-wrap').style.display = open ? 'block' : 'none';
+}
+db.ref(ROOT + '/settings/forceOpen').on('value', snap => {
+  forceOpen = !!snap.val();
+  const toggle = document.getElementById('forceOpenToggle');
+  if(toggle) toggle.checked = forceOpen;
+  renderRecordGate();
+});
+document.getElementById('forceOpenToggle').addEventListener('change', function(){
+  db.ref(ROOT + '/settings/forceOpen').set(this.checked);
+});
+
+// ---------- 걷기 기록: 제출 ----------
+document.getElementById('recordForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('rc-name').value.trim(),
+    phone: document.getElementById('rc-phone').value.trim(),
+    steps: Number(document.getElementById('rc-steps').value) || 0,
+    pace: document.getElementById('rc-pace').value.trim(),
+    comment: document.getElementById('rc-comment').value.trim(),
+    createdAt: firebase.database.ServerValue.TIMESTAMP
+  };
+  db.ref(ROOT + '/records').push(data)
+    .then(()=>{
+      document.getElementById('recordForm').reset();
+      const msg = document.getElementById('record-success');
+      msg.style.display = 'block';
+      setTimeout(()=> msg.style.display = 'none', 5000);
+    })
+    .catch(err => alert('기록 등록 중 오류가 발생했습니다: ' + err.message));
+});
+
+// ---------- 걷기 기록: 공개 피드 ----------
+db.ref(ROOT + '/records').limitToLast(30).on('value', snap => {
+  const feed = document.getElementById('record-feed');
+  const items = [];
+  snap.forEach(child => items.push(child.val()));
+  items.reverse();
+  if(items.length === 0){
+    feed.innerHTML = '<p class="note">아직 등록된 기록이 없습니다.</p>';
+    return;
+  }
+  feed.innerHTML = items.map(r => `
+    <div class="feed-item">
+      <div class="who">${escapeHtml(r.name)}</div>
+      <div class="stat">${r.steps ? r.steps.toLocaleString() + '걸음' : ''}${r.pace ? ' · ' + escapeHtml(r.pace) : ''}</div>
+      ${r.comment ? `<div>${escapeHtml(r.comment)}</div>` : ''}
+    </div>`).join('');
+});
+
+// ---------- 관리자 ----------
+document.getElementById('adminLink').addEventListener('click', function(e){
+  e.preventDefault();
+  if(sessionStorage.getItem('isAdmin') === 'true'){
+    unlockAdmin();
+    showTab('admin');
+    return;
+  }
+  const pw = prompt('관리자 비밀번호를 입력하세요.');
+  if(pw === null) return;
+  if(pw === ADMIN_PW){
+    sessionStorage.setItem('isAdmin', 'true');
+    unlockAdmin();
+    showTab('admin');
+  } else {
+    alert('비밀번호가 올바르지 않습니다.');
+  }
+});
+function unlockAdmin(){
+  document.getElementById('nav-admin').style.display = 'inline-flex';
+}
+if(sessionStorage.getItem('isAdmin') === 'true') unlockAdmin();
+
+let latestParticipants = [];
+let latestRecords = [];
+
+db.ref(ROOT + '/participants').on('value', snap => {
+  latestParticipants = [];
+  snap.forEach(child => latestParticipants.push({key: child.key, ...child.val()}));
+  renderAdminParticipants();
+  renderAdminStats();
+});
+db.ref(ROOT + '/records').on('value', snap => {
+  latestRecords = [];
+  snap.forEach(child => latestRecords.push({key: child.key, ...child.val()}));
+  renderAdminRecords();
+});
+
+function renderAdminStats(){
+  const total = latestParticipants.length;
+  const sizeCounts = {S:0,M:0,L:0,XL:0};
+  let paid = 0;
+  latestParticipants.forEach(p=>{
+    if(sizeCounts[p.size] !== undefined) sizeCounts[p.size]++;
+    if(p.paymentConfirmed) paid++;
+  });
+  const chips = [
+    `총 신청 ${total}명`,
+    `입금확인 ${paid} / 미확인 ${total - paid}`,
+    `S ${sizeCounts.S} · M ${sizeCounts.M} · L ${sizeCounts.L} · XL ${sizeCounts.XL}`
+  ];
+  document.getElementById('admin-stats').innerHTML = chips.map(c => `<span class="stat-chip">${c}</span>`).join('');
+}
+
+function renderAdminParticipants(){
+  const body = document.getElementById('admin-participants-body');
+  body.innerHTML = latestParticipants
+    .slice()
+    .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
+    .map(p => `
+      <tr>
+        <td>${escapeHtml(p.name)}</td>
+        <td>${escapeHtml(p.phone)}</td>
+        <td>${escapeHtml(p.size)}</td>
+        <td>${escapeHtml(p.mindset)}</td>
+        <td><input type="checkbox" ${p.paymentConfirmed ? 'checked' : ''} onchange="togglePaid('${p.key}', this.checked)"></td>
+        <td>${fmtDate(p.createdAt)}</td>
+      </tr>`).join('');
+}
+function togglePaid(key, checked){
+  db.ref(ROOT + '/participants/' + key + '/paymentConfirmed').set(checked);
+}
+
+function renderAdminRecords(){
+  const body = document.getElementById('admin-records-body');
+  body.innerHTML = latestRecords
+    .slice()
+    .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
+    .map(r => `
+      <tr>
+        <td>${escapeHtml(r.name)}</td>
+        <td>${escapeHtml(r.phone)}</td>
+        <td>${r.steps ?? ''}</td>
+        <td>${escapeHtml(r.pace)}</td>
+        <td>${escapeHtml(r.comment)}</td>
+        <td>${fmtDate(r.createdAt)}</td>
+      </tr>`).join('');
+}
+
+function exportParticipantsCSV(){
+  const rows = [['이름','연락처','사이즈','각오','입금확인','신청일시']];
+  latestParticipants.forEach(p => rows.push([p.name, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', fmtDate(p.createdAt)]));
+  downloadCSV('참가자명단.csv', rows);
+}
+function exportRecordsCSV(){
+  const rows = [['이름','연락처','걸음수','속도','소감','등록일시']];
+  latestRecords.forEach(r => rows.push([r.name, r.phone, r.steps, r.pace, r.comment, fmtDate(r.createdAt)]));
+  downloadCSV('걷기기록.csv', rows);
+}
+
+renderRecordGate();
+</script>
+</body>
+</html>
