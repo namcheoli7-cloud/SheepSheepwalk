@@ -426,11 +426,33 @@
         <label for="ap-size">단체티 사이즈</label>
         <select id="ap-size" required>
           <option value="">선택해주세요</option>
+          <option>XS</option>
           <option>S</option>
           <option>M</option>
           <option>L</option>
           <option>XL</option>
         </select>
+
+        <div class="note" style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.8rem;">
+            <span>제품소재: 면 100%</span>
+            <span>단위(cm)</span>
+          </div>
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr><th>사이즈</th><th>XS(80)</th><th>S(85)</th><th>M(90)</th><th>L(95)</th><th>XL(100)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>기장</td><td>63</td><td>66</td><td>70</td><td>74</td><td>78</td></tr>
+                <tr><td>몸통폭</td><td>46</td><td>49</td><td>52</td><td>55</td><td>58</td></tr>
+                <tr><td>어깨폭</td><td>41</td><td>44</td><td>47</td><td>50</td><td>53</td></tr>
+                <tr><td>소매장</td><td>55</td><td>56</td><td>58</td><td>59</td><td>60</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin:10px 0 0;font-size:0.78rem;color:var(--ink-soft);">측정 위치에 따라 2~3cm 정도의 오차가 있을 수 있으며 이는 교환/반품의 사유가 아닙니다.<br>단체복 특성상 물품의 불량이 아닌 고객님의 변심으로 인한 교환 및 환불은 불가능하니 양해 부탁드립니다.</p>
+        </div>
 
         <label for="ap-mindset">각오 한마디</label>
         <textarea id="ap-mindset" placeholder="이번 걷기대회, 어떤 마음으로 참여하시나요?"></textarea>
@@ -830,7 +852,7 @@ db.ref(ROOT + '/records').on('value', applyRecordsSnapshot);
 
 function renderAdminStats(){
   const total = latestParticipants.length;
-  const sizeCounts = {S:0,M:0,L:0,XL:0};
+  const sizeCounts = {XS:0,S:0,M:0,L:0,XL:0};
   let paid = 0;
   let attended = 0;
   latestParticipants.forEach(p=>{
@@ -842,7 +864,7 @@ function renderAdminStats(){
     `총 신청 ${total}명`,
     `입금확인 ${paid} / 미확인 ${total - paid}`,
     `출석 ${attended} / ${total}`,
-    `S ${sizeCounts.S} · M ${sizeCounts.M} · L ${sizeCounts.L} · XL ${sizeCounts.XL}`
+    `XS ${sizeCounts.XS} · S ${sizeCounts.S} · M ${sizeCounts.M} · L ${sizeCounts.L} · XL ${sizeCounts.XL}`
   ];
   document.getElementById('admin-stats').innerHTML = chips.map(c => `<span class="stat-chip">${c}</span>`).join('');
 }
