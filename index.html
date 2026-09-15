@@ -426,7 +426,7 @@
           <label for="ap-agree" style="margin:0;font-weight:400;color:inherit;">참가비 입금 후 불참 시 환불되지 않는다는 점에 동의합니다.</label>
         </div>
 
-        <button type="submit" class="primary" id="apply-submit" disabled>신청하기</button>
+        <button type="submit" class="primary" id="apply-submit">신청하기</button>
         <div class="success-msg" id="apply-success">신청이 완료되었습니다. 안내드린 계좌로 참가비를 입금해주세요!</div>
       </form>
     </div>
@@ -593,9 +593,6 @@ function downloadCSV(filename, rows){
 }
 
 // ---------- 참가 신청 ----------
-document.getElementById('ap-agree').addEventListener('change', function(){
-  document.getElementById('apply-submit').disabled = !this.checked;
-});
 document.getElementById('applyForm').addEventListener('submit', function(e){
   e.preventDefault();
   const data = {
@@ -611,7 +608,6 @@ document.getElementById('applyForm').addEventListener('submit', function(e){
   db.ref(ROOT + '/participants').push(data)
     .then(()=>{
       document.getElementById('applyForm').reset();
-      document.getElementById('apply-submit').disabled = true;
       const msg = document.getElementById('apply-success');
       msg.style.display = 'block';
       setTimeout(()=> msg.style.display = 'none', 5000);
@@ -792,18 +788,22 @@ if(sessionStorage.getItem('isAdmin') === 'true') unlockAdmin();
 let latestParticipants = [];
 let latestRecords = [];
 
-db.ref(ROOT + '/participants').on('value', snap => {
+function applyParticipantsSnapshot(snap){
   latestParticipants = [];
   snap.forEach(child => latestParticipants.push({key: child.key, ...child.val()}));
   renderAdminParticipants();
   renderAdminStats();
   renderMindsetFeed();
-});
-db.ref(ROOT + '/records').on('value', snap => {
+}
+function applyRecordsSnapshot(snap){
   latestRecords = [];
   snap.forEach(child => latestRecords.push({key: child.key, ...child.val()}));
   renderAdminRecords();
-});
+}
+db.ref(ROOT + '/participants').once('value').then(applyParticipantsSnapshot);
+db.ref(ROOT + '/participants').on('value', applyParticipantsSnapshot);
+db.ref(ROOT + '/records').once('value').then(applyRecordsSnapshot);
+db.ref(ROOT + '/records').on('value', applyRecordsSnapshot);
 
 function renderAdminStats(){
   const total = latestParticipants.length;
