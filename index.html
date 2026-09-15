@@ -327,7 +327,7 @@
   <p class="pretitle">제1회 천하제일 걷기대회</p>
   <p class="eventname">쉽게 쉽게 걷자</p>
   <p class="eventmeta">2026년 10월 10일(토) · 어린이대공원</p>
-  <div class="trail"><span class="on"></span><span></span><span></span><span></span></div>
+  <div class="trail"><span class="on"></span><span></span><span></span></div>
 </header>
 
 <div class="wrap">
@@ -545,7 +545,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 <script>
-// ===== TODO: 아래 Firebase 설정값을 실제 값으로 교체해주세요 (dodgeball-efbff 프로젝트) =====
+// Firebase 설정 (dodgeball-efbff 프로젝트 재사용)
 const firebaseConfig = {
   apiKey: "AIzaSyB8_ABUYRet6Qb1jlcjYGPYRSXJ4MCnRc4",
   authDomain: "dodgeball-efbff.firebaseapp.com",
@@ -584,7 +584,7 @@ const ADMIN_PW = '7979';
 })();
 
 // ---------- 탭 전환 ----------
-const TRAIL_ORDER = ['info','apply','record','admin'];
+const TRAIL_ORDER = ['info','apply','record'];
 function showTab(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
