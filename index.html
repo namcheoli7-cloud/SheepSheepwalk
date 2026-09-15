@@ -342,7 +342,7 @@
   <section id="panel-info" class="panel active">
     <div class="card">
       <h2>대회 소개</h2>
-      <p>바쁘고 힘든 일상에 지치셨나요?<br>모든것이 빠르게만 흘러가는 삶 속에서,<br>주변 풍경을 보며<br>조금은 천천히 걸어보는건 어떨까요?</p>
+      <p style="text-align:center;">바쁘고 힘든 일상에 지치셨나요?<br>모든것이 빠르게만 흘러가는 삶 속에서<br>주변 풍경을 보며<br>조금은 천천히 걸어보는건 어떨까요?</p>
     </div>
 
     <div class="card">
@@ -361,7 +361,7 @@
         <li>
           <div class="flow-dot"></div>
           <p class="flow-title">누가누가 잘 걸었나!</p>
-          <p class="flow-desc">걷기대회 소감 나누기와 간단한 시상이 준비되어 있어요.</p>
+          <p class="flow-desc">걷기대회 소감 나누기와 간단한 시상이<br>준비되어 있어요.</p>
         </li>
         <li>
           <div class="flow-dot"></div>
@@ -377,7 +377,7 @@
         <li>
           <div class="flow-dot"></div>
           <p class="flow-title">소화시키러 가자!</p>
-          <p class="flow-desc">열린광장 에어로빅 교실 댄스파티</p>
+          <p class="flow-desc">열린광장 에어로빅 교실 댄스파티~!</p>
         </li>
       </ol>
     </div>
@@ -690,7 +690,7 @@ document.getElementById('recordForm').addEventListener('submit', function(e){
 db.ref(ROOT + '/records').limitToLast(30).on('value', snap => {
   const feed = document.getElementById('record-feed');
   const items = [];
-  snap.forEach(child => items.push(child.val()));
+  snap.forEach(child => { items.push(child.val()); });
   items.reverse();
   if(items.length === 0){
     feed.innerHTML = '<p class="note">아직 등록된 기록이 없습니다.</p>';
@@ -811,14 +811,14 @@ let latestRecords = [];
 
 function applyParticipantsSnapshot(snap){
   latestParticipants = [];
-  snap.forEach(child => latestParticipants.push({key: child.key, ...child.val()}));
+  snap.forEach(child => { latestParticipants.push({key: child.key, ...child.val()}); });
   renderAdminParticipants();
   renderAdminStats();
   renderMindsetFeed();
 }
 function applyRecordsSnapshot(snap){
   latestRecords = [];
-  snap.forEach(child => latestRecords.push({key: child.key, ...child.val()}));
+  snap.forEach(child => { latestRecords.push({key: child.key, ...child.val()}); });
   renderAdminRecords();
 }
 db.ref(ROOT + '/participants').once('value').then(applyParticipantsSnapshot);
