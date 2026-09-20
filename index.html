@@ -403,6 +403,11 @@
 
   <!-- 참가신청 -->
   <section id="panel-apply" class="panel">
+    <div id="apply-gate" class="card gate" style="display:none;">
+      <h2 style="border:none;">참가 신청</h2>
+      <p>현재 참가 신청을 받고 있지 않습니다.<br>잠시 후 다시 확인해주세요.</p>
+    </div>
+    <div id="apply-open-wrap">
     <div class="card">
       <h2>참가 신청</h2>
       <div class="payinfo">
@@ -466,6 +471,7 @@
         <div class="success-msg" id="apply-success">신청이 완료되었습니다. 안내드린 계좌로 참가비를 입금해주세요!</div>
       </form>
     </div>
+    </div>
   </section>
 
   <!-- 걷기기록 -->
@@ -525,6 +531,10 @@
     <div class="card">
       <h2>참가 현황</h2>
       <div class="statrow" id="admin-stats"></div>
+      <div class="togglerow">
+        <input type="checkbox" id="applyClosedToggle">
+        <label for="applyClosedToggle" style="margin:0;font-weight:400;">참가 신청 잠그기 (체크하면 신청폼이 막혀요)</label>
+      </div>
       <div class="togglerow">
         <input type="checkbox" id="forceOpenToggle">
         <label for="forceOpenToggle" style="margin:0;font-weight:400;">걷기 기록 입력 강제로 열기 (테스트용, 대회일 아니어도 입력 가능)</label>
@@ -680,6 +690,18 @@ db.ref(ROOT + '/settings/forceOpen').on('value', snap => {
 });
 document.getElementById('forceOpenToggle').addEventListener('change', function(){
   db.ref(ROOT + '/settings/forceOpen').set(this.checked);
+});
+
+// ---------- 참가신청: 관리자 잠금 ----------
+db.ref(ROOT + '/settings/applyClosed').on('value', snap => {
+  const closed = !!snap.val();
+  document.getElementById('apply-gate').style.display = closed ? 'block' : 'none';
+  document.getElementById('apply-open-wrap').style.display = closed ? 'none' : 'block';
+  const toggle = document.getElementById('applyClosedToggle');
+  if(toggle) toggle.checked = closed;
+});
+document.getElementById('applyClosedToggle').addEventListener('change', function(){
+  db.ref(ROOT + '/settings/applyClosed').set(this.checked);
 });
 
 // ---------- 걷기 기록: 제출 ----------
