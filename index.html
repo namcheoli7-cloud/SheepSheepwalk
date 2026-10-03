@@ -1104,7 +1104,7 @@ function renderMissionVotes(){
 
 db.ref(ROOT + '/teamMissions').on('value', snap => {
   latestMissions = [];
-  snap.forEach(child => latestMissions.push({key: child.key, ...child.val()}));
+  snap.forEach(child => { latestMissions.push({key: child.key, ...child.val()}); });
   latestMissions.sort((a,b)=> (Number(a.createdAt)||0) - (Number(b.createdAt)||0));
   if(currentMissionIndex >= latestMissions.length){
     currentMissionIndex = Math.max(0, latestMissions.length - 1);
