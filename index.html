@@ -698,6 +698,18 @@
 
     <div class="card">
       <div class="adminbar">
+        <h2 style="margin:0;">팀 미션 사진</h2>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>사진</th><th>팀</th><th>제목</th><th>투표수</th><th>등록일시</th><th>삭제</th></tr></thead>
+          <tbody id="admin-missions-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="adminbar">
         <h2 style="margin:0;">소감 한마디</h2>
         <button class="ghost" onclick="exportFeedbackCSV()">CSV 다운로드</button>
       </div>
@@ -1008,62 +1020,63 @@ let latestMissions = [];
 let missionVotes = {};
 let currentMissionIndex = 0;
 function currentMissionVote(){ return localStorage.getItem('walk2026_teamMissionVote'); }
+
 function renderMissionVotes(){
   const area = document.getElementById('mission-vote-area');
   if(!area) return;
   if(latestMissions.length === 0){
+    currentMissionIndex = 0;
     area.innerHTML = '<p class="note">아직 등록된 팀 미션 사진이 없습니다.</p>';
     return;
   }
-  if(currentMissionIndex >= latestMissions.length) currentMissionIndex = latestMissions.length - 1;
-  if(currentMissionIndex < 0) currentMissionIndex = 0;
+
+  currentMissionIndex = Math.max(0, Math.min(currentMissionIndex, latestMissions.length - 1));
+  const mission = latestMissions[currentMissionIndex];
   const votedKey = currentMissionVote();
 
+  // 한 번에 사진 1장만 그려서, 사진이 여러 장이어도 안정적으로 좌우 이동되도록 합니다.
   area.innerHTML = `
     <div class="mission-slider-wrap">
-      <div class="mission-slider" id="mission-slider">
-        ${latestMissions.map(m => `
-          <div class="mission-slide" data-key="${m.key}">
-            <img class="mission-photo" src="${escapeHtml(m.photoUrl)}" alt="${escapeHtml(m.title)}">
-            <div class="mission-meta">
-              <div class="mission-team">${escapeHtml(m.team)}팀 미션</div>
-              <div class="mission-title">${escapeHtml(m.title)}</div>
-              <button type="button" class="vote-btn mission-vote-btn ${votedKey === m.key ? 'voted' : ''}" data-mission-key="${m.key}">
-                👍 이 사진에 투표 <span class="vote-count">${missionVotes[m.key] || 0}</span>
-              </button>
-            </div>
-          </div>`).join('')}
+      <div class="mission-slide" data-key="${mission.key}">
+        <img class="mission-photo" src="${mission.photoUrl}" alt="${escapeHtml(mission.title)}">
+        <div class="mission-meta">
+          <div class="mission-team">${escapeHtml(mission.team)}팀 미션</div>
+          <div class="mission-title">${escapeHtml(mission.title)}</div>
+          <button type="button" class="vote-btn mission-vote-btn ${votedKey === mission.key ? 'voted' : ''}" data-mission-key="${mission.key}">
+            👍 이 사진에 투표 <span class="vote-count">${missionVotes[mission.key] || 0}</span>
+          </button>
+        </div>
       </div>
       <div class="mission-nav">
-        <button type="button" class="mission-arrow" id="mission-prev" aria-label="이전 사진">‹</button>
-        <span class="mission-count" id="mission-count">${currentMissionIndex + 1} / ${latestMissions.length}</span>
-        <button type="button" class="mission-arrow" id="mission-next" aria-label="다음 사진">›</button>
+        <button type="button" class="mission-arrow" id="mission-prev" aria-label="이전 사진" ${currentMissionIndex === 0 ? 'disabled' : ''}>‹</button>
+        <span class="mission-count">${currentMissionIndex + 1} / ${latestMissions.length}</span>
+        <button type="button" class="mission-arrow" id="mission-next" aria-label="다음 사진" ${currentMissionIndex === latestMissions.length - 1 ? 'disabled' : ''}>›</button>
       </div>
       <button type="button" class="vote-cancel" id="mission-vote-cancel" style="display:${votedKey ? 'inline-flex' : 'none'};">투표 취소</button>
     </div>`;
 
-  const slider = document.getElementById('mission-slider');
-  const scrollToIndex = (idx) => {
-    currentMissionIndex = Math.max(0, Math.min(idx, latestMissions.length - 1));
-    slider.scrollTo({left: slider.clientWidth * currentMissionIndex, behavior:'smooth'});
-    const count = document.getElementById('mission-count');
-    if(count) count.textContent = `${currentMissionIndex + 1} / ${latestMissions.length}`;
-  };
-  requestAnimationFrame(()=> slider.scrollTo({left: slider.clientWidth * currentMissionIndex, behavior:'auto'}));
-  document.getElementById('mission-prev').addEventListener('click', ()=> scrollToIndex(currentMissionIndex - 1));
-  document.getElementById('mission-next').addEventListener('click', ()=> scrollToIndex(currentMissionIndex + 1));
-  slider.addEventListener('scroll', ()=>{
-    if(!slider.clientWidth) return;
-    const idx = Math.round(slider.scrollLeft / slider.clientWidth);
-    if(idx !== currentMissionIndex){
-      currentMissionIndex = idx;
-      const count = document.getElementById('mission-count');
-      if(count) count.textContent = `${currentMissionIndex + 1} / ${latestMissions.length}`;
-    }
-  });
+  const prevBtn = document.getElementById('mission-prev');
+  const nextBtn = document.getElementById('mission-next');
+  if(prevBtn){
+    prevBtn.addEventListener('click', ()=>{
+      if(currentMissionIndex > 0){
+        currentMissionIndex--;
+        renderMissionVotes();
+      }
+    });
+  }
+  if(nextBtn){
+    nextBtn.addEventListener('click', ()=>{
+      if(currentMissionIndex < latestMissions.length - 1){
+        currentMissionIndex++;
+        renderMissionVotes();
+      }
+    });
+  }
 
-  area.querySelectorAll('.mission-vote-btn').forEach(btn => {
-    btn.addEventListener('click', function(){
+  const voteBtn = area.querySelector('.mission-vote-btn');
+  if(voteBtn){
+    voteBtn.addEventListener('click', function(){
       const key = this.dataset.missionKey;
       const prev = currentMissionVote();
       if(prev === key) return;
@@ -1074,7 +1087,7 @@ function renderMissionVotes(){
       localStorage.setItem('walk2026_teamMissionVote', key);
       renderMissionVotes();
     });
-  });
+  }
 
   const cancel = document.getElementById('mission-vote-cancel');
   if(cancel){
@@ -1093,11 +1106,16 @@ db.ref(ROOT + '/teamMissions').on('value', snap => {
   latestMissions = [];
   snap.forEach(child => latestMissions.push({key: child.key, ...child.val()}));
   latestMissions.sort((a,b)=> (Number(a.createdAt)||0) - (Number(b.createdAt)||0));
+  if(currentMissionIndex >= latestMissions.length){
+    currentMissionIndex = Math.max(0, latestMissions.length - 1);
+  }
   renderMissionVotes();
+  renderAdminMissions();
 });
 db.ref(ROOT + '/teamMissionVotes').on('value', snap => {
   missionVotes = snap.val() || {};
   renderMissionVotes();
+  renderAdminMissions();
 });
 
 // ---------- 소감 한마디 ----------
@@ -1319,6 +1337,40 @@ function renderAdminRecords(){
 function deleteRecord(key){
   if(!confirm('이 기록을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
   db.ref(ROOT + '/records/' + key).remove();
+}
+
+function renderAdminMissions(){
+  const body = document.getElementById('admin-missions-body');
+  if(!body) return;
+  if(latestMissions.length === 0){
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-soft);">아직 제출된 팀 미션 사진이 없습니다.</td></tr>';
+    return;
+  }
+  body.innerHTML = latestMissions
+    .slice()
+    .sort((a,b)=> (Number(b.createdAt)||0) - (Number(a.createdAt)||0))
+    .map(m => `
+      <tr>
+        <td><img src="${m.photoUrl}" alt="${escapeHtml(m.title)}" style="width:84px;height:64px;object-fit:cover;border-radius:6px;display:block;"></td>
+        <td>${escapeHtml(m.team)}팀</td>
+        <td>${escapeHtml(m.title)}</td>
+        <td>${Number(missionVotes[m.key] || 0)}</td>
+        <td>${fmtDate(m.createdAt)}</td>
+        <td><button type="button" class="del-btn" onclick="deleteMission('${m.key}')">삭제</button></td>
+      </tr>`).join('');
+}
+function deleteMission(key){
+  if(!confirm('이 팀 미션 사진을 삭제하시겠습니까? 사진과 투표수가 함께 삭제되며 되돌릴 수 없습니다.')) return;
+  const updates = {};
+  updates['teamMissions/' + key] = null;
+  updates['teamMissionVotes/' + key] = null;
+  db.ref(ROOT).update(updates)
+    .then(()=>{
+      if(currentMissionVote() === key){
+        localStorage.removeItem('walk2026_teamMissionVote');
+      }
+    })
+    .catch(err => alert('팀 미션 삭제 중 오류가 발생했습니다: ' + err.message));
 }
 
 function renderAdminFeedback(){
