@@ -695,6 +695,19 @@
         </table>
       </div>
     </div>
+
+    <div class="card">
+      <div class="adminbar">
+        <h2 style="margin:0;">소감 한마디</h2>
+        <button class="ghost" onclick="exportFeedbackCSV()">CSV 다운로드</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>소감</th><th>개선사항·아이디어</th><th>제2회 참여의사</th><th>인스타그램</th><th>제출일시</th><th>삭제</th></tr></thead>
+          <tbody id="admin-feedback-body"></tbody>
+        </table>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -1214,6 +1227,7 @@ if(sessionStorage.getItem('isAdmin') === 'true') unlockAdmin();
 
 let latestParticipants = [];
 let latestRecords = [];
+let latestFeedback = [];
 
 function applyParticipantsSnapshot(snap){
   latestParticipants = [];
@@ -1228,10 +1242,17 @@ function applyRecordsSnapshot(snap){
   renderAdminRecords();
   renderRank();
 }
+function applyFeedbackSnapshot(snap){
+  latestFeedback = [];
+  snap.forEach(child => { latestFeedback.push({key: child.key, ...child.val()}); });
+  renderAdminFeedback();
+}
 db.ref(ROOT + '/participants').once('value').then(applyParticipantsSnapshot);
 db.ref(ROOT + '/participants').on('value', applyParticipantsSnapshot);
 db.ref(ROOT + '/records').once('value').then(applyRecordsSnapshot);
 db.ref(ROOT + '/records').on('value', applyRecordsSnapshot);
+db.ref(ROOT + '/feedback').once('value').then(applyFeedbackSnapshot);
+db.ref(ROOT + '/feedback').on('value', applyFeedbackSnapshot);
 
 function renderAdminStats(){
   const total = latestParticipants.length;
@@ -1300,6 +1321,31 @@ function deleteRecord(key){
   db.ref(ROOT + '/records/' + key).remove();
 }
 
+function renderAdminFeedback(){
+  const body = document.getElementById('admin-feedback-body');
+  if(!body) return;
+  if(latestFeedback.length === 0){
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-soft);">아직 제출된 소감이 없습니다.</td></tr>';
+    return;
+  }
+  body.innerHTML = latestFeedback
+    .slice()
+    .sort((a,b)=> (b.createdAt||0) - (a.createdAt||0))
+    .map(f => `
+      <tr>
+        <td>${escapeHtml(f.comment)}</td>
+        <td>${escapeHtml(f.idea)}</td>
+        <td>${escapeHtml(f.again)}</td>
+        <td>${escapeHtml(f.instagram)}</td>
+        <td>${fmtDate(f.createdAt)}</td>
+        <td><button type="button" class="del-btn" onclick="deleteFeedback('${f.key}')">삭제</button></td>
+      </tr>`).join('');
+}
+function deleteFeedback(key){
+  if(!confirm('이 소감을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
+  db.ref(ROOT + '/feedback/' + key).remove();
+}
+
 function exportParticipantsCSV(){
   const rows = [['이름','닉네임','연락처','사이즈','각오','입금확인','출석','신청일시']];
   latestParticipants.forEach(p => rows.push([p.name, p.nickname, p.phone, p.size, p.mindset, p.paymentConfirmed ? '확인' : '미확인', p.attended ? '출석' : '미출석', fmtDate(p.createdAt)]));
@@ -1309,6 +1355,14 @@ function exportRecordsCSV(){
   const rows = [['닉네임','걸음수','평균페이스','등록일시']];
   latestRecords.forEach(r => rows.push([r.nickname || r.name || '', r.steps, r.pace || formatPace(r.paceSeconds), fmtDate(r.createdAt)]));
   downloadCSV('걷기기록.csv', rows);
+}
+function exportFeedbackCSV(){
+  const rows = [['소감','개선사항·아이디어','제2회 참여의사','인스타그램','제출일시']];
+  latestFeedback
+    .slice()
+    .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
+    .forEach(f => rows.push([f.comment, f.idea, f.again, f.instagram, fmtDate(f.createdAt)]));
+  downloadCSV('소감한마디.csv', rows);
 }
 
 renderRecordGate();
