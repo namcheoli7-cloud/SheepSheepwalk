@@ -93,7 +93,8 @@
     color:var(--green-dark);
     border-bottom-color:var(--amber);
   }
-  nav.tabs button#nav-admin{display:none;}
+  nav.tabs button#nav-admin,
+  nav.tabs button#nav-apply{display:none;}
 
   .panel{display:none;}
   .panel.active{display:block;}
@@ -312,6 +313,65 @@
   .adminbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
   .togglerow{display:flex;align-items:center;gap:8px;font-size:0.88rem;margin-bottom:6px;}
 
+
+  .rank-filter{display:flex;gap:8px;margin-bottom:14px;}
+  .rank-filter-btn{
+    flex:1;
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px 10px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-weight:700;
+    color:var(--green-dark);
+    cursor:pointer;
+  }
+  .rank-filter-btn.active{background:var(--green);color:#fff;border-color:var(--green);}
+  .rank-table td:first-child,.rank-table th:first-child{text-align:center;width:54px;}
+  .rank-table td:last-child,.rank-table th:last-child{text-align:right;}
+
+  .mission-slider-wrap{position:relative;}
+  .mission-slider{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+    border-radius:10px;
+  }
+  .mission-slider::-webkit-scrollbar{display:none;}
+  .mission-slide{
+    min-width:100%;
+    scroll-snap-align:start;
+    padding:2px;
+  }
+  .mission-photo{
+    width:100%;
+    aspect-ratio:4/3;
+    object-fit:cover;
+    border-radius:10px;
+    display:block;
+    background:var(--bg-alt);
+  }
+  .mission-meta{padding:12px 2px 4px;}
+  .mission-team{font-size:0.82rem;font-weight:700;color:var(--brick);}
+  .mission-title{font-family:'Jua',sans-serif;font-size:1.15rem;color:var(--green-dark);margin-top:2px;}
+  .mission-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;}
+  .mission-arrow{
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--green-dark);
+    width:40px;height:40px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:1.1rem;
+    font-weight:700;
+  }
+  .mission-count{font-size:0.84rem;color:var(--ink-soft);}
+  .mission-vote-btn{margin-top:8px;width:100%;}
+  .mission-vote-btn.voted{background:var(--amber);color:#fff;border-color:var(--amber);}
+  .upload-status{margin-top:8px;font-size:0.84rem;color:var(--ink-soft);}
+
   footer{
     text-align:center;
     color:var(--ink-soft);
@@ -327,7 +387,7 @@
   <p class="pretitle">제1회 천하제일 걷기대회</p>
   <p class="eventname">쉽게 쉽게 걷자</p>
   <p class="eventmeta">2026년 10월 10일(토) · 어린이대공원</p>
-  <div class="trail"><span class="on"></span><span></span><span></span></div>
+  <div class="trail"><span class="on"></span><span></span><span></span><span></span></div>
 </header>
 
 <div class="wrap">
@@ -335,6 +395,8 @@
     <button id="nav-info" class="active" onclick="showTab('info')">대회안내</button>
     <button id="nav-apply" onclick="showTab('apply')">참가신청</button>
     <button id="nav-record" onclick="showTab('record')">걷기기록</button>
+    <button id="nav-story" onclick="showTab('story')">함께 걸은 이야기</button>
+    <button id="nav-feedback" onclick="showTab('feedback')">소감 한마디</button>
     <button id="nav-admin" onclick="showTab('admin')">관리자</button>
   </nav>
 
@@ -488,46 +550,94 @@
 
     <div id="record-open-wrap" style="display:none;">
       <div class="card">
-        <h2>내 기록 남기기</h2>
+        <h2>내 기록 입력</h2>
         <form id="recordForm">
-          <label for="rc-name">이름</label>
-          <input type="text" id="rc-name" required>
+          <label for="rc-nickname">닉네임</label>
+          <input type="text" id="rc-nickname" placeholder="기록랭크에 표시될 닉네임" required>
 
           <label for="rc-steps">걸음수</label>
           <input type="number" id="rc-steps" min="0" placeholder="예: 9800" required>
 
-          <label>소요시간</label>
-          <div class="time-row">
-            <select id="rc-hour">
-              <option value="0">0시간</option>
-              <option value="1">1시간</option>
-              <option value="2">2시간</option>
-              <option value="3">3시간</option>
-            </select>
-            <select id="rc-min"></select>
-          </div>
+          <label for="rc-pace">평균 페이스 (분/km)</label>
+          <input type="text" id="rc-pace" inputmode="numeric" placeholder="예: 10:30" required>
+          <div class="note">분:초 형식으로 입력해주세요. 예) 10분 30초 → 10:30</div>
 
-          <label for="rc-speed">속도</label>
-          <select id="rc-speed"></select>
-
-          <label for="rc-comment">소감 한마디</label>
-          <textarea id="rc-comment" placeholder="오늘 걷기 어떠셨나요?"></textarea>
-
-          <label>제2회 걷기대회에도 참여할 의향 있나요?</label>
-          <div class="radio-row">
-            <label class="radio-opt"><input type="radio" name="rc-again" value="예" required> 예</label>
-            <label class="radio-opt"><input type="radio" name="rc-again" value="아니오"> 아니오</label>
-          </div>
-
-          <button type="submit" class="primary">기록 남기기</button>
+          <button type="submit" class="primary">내 기록 등록하기</button>
           <div class="success-msg" id="record-success">기록이 등록되었습니다. 수고하셨습니다!</div>
         </form>
       </div>
 
       <div class="card">
-        <h2>함께 걸은 이야기</h2>
-        <div id="record-feed"><p class="note">아직 등록된 기록이 없습니다.</p></div>
+        <h2>팀 미션 제출</h2>
+        <form id="missionForm">
+          <label>팀 선택</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="mission-team" value="A" required> A팀</label>
+            <label class="radio-opt"><input type="radio" name="mission-team" value="B"> B팀</label>
+            <label class="radio-opt"><input type="radio" name="mission-team" value="C"> C팀</label>
+          </div>
+
+          <label for="mission-title">사진 제목</label>
+          <input type="text" id="mission-title" placeholder="사진 제목을 입력해주세요" required>
+
+          <label for="mission-photo">사진 제출</label>
+          <input type="file" id="mission-photo" accept="image/*" required>
+          <div class="upload-status" id="mission-upload-status"></div>
+
+          <button type="submit" class="primary" id="mission-submit">팀 미션 제출하기</button>
+          <div class="success-msg" id="mission-success">팀 미션 사진이 등록되었습니다!</div>
+        </form>
       </div>
+    </div>
+  </section>
+
+  <!-- 함께 걸은 이야기 -->
+  <section id="panel-story" class="panel">
+    <div class="card">
+      <h2>기록 랭크</h2>
+      <div class="rank-filter">
+        <button type="button" class="rank-filter-btn active" data-rank="steps">걸음수 순위</button>
+        <button type="button" class="rank-filter-btn" data-rank="pace">평균 페이스 순위</button>
+      </div>
+      <div class="tablewrap">
+        <table class="rank-table">
+          <thead><tr><th>순위</th><th>닉네임</th><th id="rank-value-head">걸음수</th></tr></thead>
+          <tbody id="rank-body"><tr><td colspan="3" style="text-align:center;color:var(--ink-soft);">아직 등록된 기록이 없습니다.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>팀 미션 투표하기</h2>
+      <div id="mission-vote-area">
+        <p class="note">아직 등록된 팀 미션 사진이 없습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 소감 한마디 -->
+  <section id="panel-feedback" class="panel">
+    <div class="card">
+      <h2>소감 한마디</h2>
+      <form id="feedbackForm">
+        <label for="fb-comment">소감 한마디</label>
+        <textarea id="fb-comment" placeholder="오늘 걷기대회는 어떠셨나요?" required></textarea>
+
+        <label for="fb-idea">개선사항이나 재미있는 아이디어가 있다면 적어주세요</label>
+        <textarea id="fb-idea" placeholder="다음 대회에 반영했으면 하는 점을 자유롭게 적어주세요"></textarea>
+
+        <label>제2회 걷기대회 참여의사</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="fb-again" value="예" required> 예</label>
+          <label class="radio-opt"><input type="radio" name="fb-again" value="아니오"> 아니오</label>
+        </div>
+
+        <label for="fb-instagram">(선택) 인스타그램 태그 희망 시 아이디 남겨주세요</label>
+        <input type="text" id="fb-instagram" placeholder="예: @sheepsheepwalk">
+
+        <button type="submit" class="primary">소감 제출하기</button>
+        <div class="success-msg" id="feedback-success">소중한 의견 감사합니다!</div>
+      </form>
     </div>
   </section>
 
@@ -566,7 +676,7 @@
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>이름</th><th>걸음수</th><th>소요시간/속도</th><th>소감</th><th>재참여의향</th><th>등록일시</th><th>삭제</th></tr></thead>
+          <thead><tr><th>닉네임</th><th>걸음수</th><th>평균페이스</th><th>등록일시</th><th>삭제</th></tr></thead>
           <tbody id="admin-records-body"></tbody>
         </table>
       </div>
@@ -581,6 +691,7 @@
 <!-- Firebase (dodgeball-efbff 프로젝트 재사용) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 <script>
 // Firebase 설정 (dodgeball-efbff 프로젝트 재사용)
 const firebaseConfig = {
@@ -594,34 +705,12 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const storage = firebase.storage();
 const ROOT = 'walk2026'; // 이 행사 전용 경로 (기존 앱 데이터와 분리)
 const ADMIN_PW = '7979';
 
-// ---------- 걷기기록 분/속도 드롭다운 옵션 채우기 ----------
-(function populateRecordDropdowns(){
-  const minSel = document.getElementById('rc-min');
-  for(let m = 0; m < 60; m++){
-    const opt = document.createElement('option');
-    opt.value = m;
-    opt.textContent = m + '분';
-    minSel.appendChild(opt);
-  }
-  const speedSel = document.getElementById('rc-speed');
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = '선택해주세요';
-  speedSel.appendChild(placeholder);
-  for(let i = 10; i <= 100; i++){
-    const val = (i / 10).toFixed(1) + 'km/h';
-    const opt = document.createElement('option');
-    opt.value = val;
-    opt.textContent = val;
-    speedSel.appendChild(opt);
-  }
-})();
-
 // ---------- 탭 전환 ----------
-const TRAIL_ORDER = ['info','apply','record'];
+const TRAIL_ORDER = ['info','record','story','feedback'];
 function showTab(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
@@ -710,21 +799,33 @@ document.getElementById('applyClosedToggle').addEventListener('change', function
 });
 
 // ---------- 걷기 기록: 제출 ----------
+function parsePaceToSeconds(value){
+  const s = String(value || '').trim();
+  const match = s.match(/^(\d{1,3}):([0-5]\d)$/);
+  if(!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+function formatPace(seconds){
+  const total = Number(seconds);
+  if(!Number.isFinite(total) || total <= 0) return '';
+  const min = Math.floor(total / 60);
+  const sec = Math.round(total % 60);
+  return `${min}:${String(sec).padStart(2,'0')}`;
+}
+
 document.getElementById('recordForm').addEventListener('submit', function(e){
   e.preventDefault();
-  const hour = document.getElementById('rc-hour').value;
-  const min = document.getElementById('rc-min').value;
-  const speed = document.getElementById('rc-speed').value;
-  const paceParts = [];
-  if(Number(hour) > 0 || Number(min) > 0) paceParts.push(`${hour}시간 ${min}분`);
-  if(speed) paceParts.push(speed);
-  const againEl = document.querySelector('input[name="rc-again"]:checked');
+  const paceText = document.getElementById('rc-pace').value.trim();
+  const paceSeconds = parsePaceToSeconds(paceText);
+  if(paceSeconds === null){
+    alert('평균 페이스를 10:30처럼 분:초 형식으로 입력해주세요.');
+    return;
+  }
   const data = {
-    name: document.getElementById('rc-name').value.trim(),
+    nickname: document.getElementById('rc-nickname').value.trim(),
     steps: Number(document.getElementById('rc-steps').value) || 0,
-    pace: paceParts.join(' · '),
-    comment: document.getElementById('rc-comment').value.trim(),
-    again: againEl ? againEl.value : '',
+    pace: formatPace(paceSeconds),
+    paceSeconds,
     createdAt: firebase.database.ServerValue.TIMESTAMP
   };
   db.ref(ROOT + '/records').push(data)
@@ -737,22 +838,212 @@ document.getElementById('recordForm').addEventListener('submit', function(e){
     .catch(err => alert('기록 등록 중 오류가 발생했습니다: ' + err.message));
 });
 
-// ---------- 걷기 기록: 공개 피드 ----------
-db.ref(ROOT + '/records').limitToLast(30).on('value', snap => {
-  const feed = document.getElementById('record-feed');
-  const items = [];
-  snap.forEach(child => { items.push(child.val()); });
-  items.reverse();
-  if(items.length === 0){
-    feed.innerHTML = '<p class="note">아직 등록된 기록이 없습니다.</p>';
+// ---------- 팀 미션 사진 제출 ----------
+document.getElementById('missionForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const teamEl = document.querySelector('input[name="mission-team"]:checked');
+  const title = document.getElementById('mission-title').value.trim();
+  const fileInput = document.getElementById('mission-photo');
+  const file = fileInput.files && fileInput.files[0];
+  if(!teamEl || !title || !file) return;
+  if(!file.type.startsWith('image/')){
+    alert('이미지 파일만 업로드할 수 있습니다.');
     return;
   }
-  feed.innerHTML = items.map(r => `
-    <div class="feed-item">
-      <div class="who">${escapeHtml(r.name)}</div>
-      <div class="stat">${r.steps ? r.steps.toLocaleString() + '걸음' : ''}${r.pace ? ' · ' + escapeHtml(r.pace) : ''}</div>
-      ${r.comment ? `<div>${escapeHtml(r.comment)}</div>` : ''}
-    </div>`).join('');
+  if(file.size > 15 * 1024 * 1024){
+    alert('사진은 15MB 이하로 올려주세요.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('mission-submit');
+  const status = document.getElementById('mission-upload-status');
+  const oldText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = '사진 업로드 중...';
+  status.textContent = '사진을 업로드하고 있습니다.';
+
+  try{
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `${ROOT}/teamMissions/${Date.now()}_${Math.random().toString(36).slice(2,8)}_${safeName}`;
+    const storageRef = storage.ref(path);
+    const snapshot = await storageRef.put(file);
+    const photoUrl = await snapshot.ref.getDownloadURL();
+    await db.ref(ROOT + '/teamMissions').push({
+      team: teamEl.value,
+      title,
+      photoUrl,
+      storagePath: path,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    document.getElementById('missionForm').reset();
+    status.textContent = '';
+    const msg = document.getElementById('mission-success');
+    msg.style.display = 'block';
+    setTimeout(()=> msg.style.display = 'none', 5000);
+  } catch(err){
+    status.textContent = '';
+    alert('팀 미션 등록 중 오류가 발생했습니다: ' + err.message);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = oldText;
+  }
+});
+
+// ---------- 기록 랭크 ----------
+let currentRankMode = 'steps';
+function renderRank(){
+  const body = document.getElementById('rank-body');
+  const head = document.getElementById('rank-value-head');
+  if(!body || !head) return;
+
+  let items = latestRecords.slice();
+  if(currentRankMode === 'steps'){
+    items = items.filter(r => Number.isFinite(Number(r.steps)))
+      .sort((a,b)=> (Number(b.steps)||0) - (Number(a.steps)||0));
+    head.textContent = '걸음수';
+  } else {
+    items = items.filter(r => Number(r.paceSeconds) > 0)
+      .sort((a,b)=> Number(a.paceSeconds) - Number(b.paceSeconds));
+    head.textContent = '평균 페이스';
+  }
+
+  if(items.length === 0){
+    body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--ink-soft);">아직 등록된 기록이 없습니다.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = items.map((r, idx)=> `
+    <tr>
+      <td>${idx + 1}</td>
+      <td>${escapeHtml(r.nickname || r.name || '')}</td>
+      <td>${currentRankMode === 'steps' ? `${Number(r.steps || 0).toLocaleString()}걸음` : `${escapeHtml(r.pace || formatPace(r.paceSeconds))} /km`}</td>
+    </tr>`).join('');
+}
+
+document.querySelectorAll('.rank-filter-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    currentRankMode = this.dataset.rank;
+    document.querySelectorAll('.rank-filter-btn').forEach(b => b.classList.toggle('active', b === this));
+    renderRank();
+  });
+});
+
+// ---------- 팀 미션 슬라이드 + 투표 ----------
+let latestMissions = [];
+let missionVotes = {};
+let currentMissionIndex = 0;
+function currentMissionVote(){ return localStorage.getItem('walk2026_teamMissionVote'); }
+function renderMissionVotes(){
+  const area = document.getElementById('mission-vote-area');
+  if(!area) return;
+  if(latestMissions.length === 0){
+    area.innerHTML = '<p class="note">아직 등록된 팀 미션 사진이 없습니다.</p>';
+    return;
+  }
+  if(currentMissionIndex >= latestMissions.length) currentMissionIndex = latestMissions.length - 1;
+  if(currentMissionIndex < 0) currentMissionIndex = 0;
+  const votedKey = currentMissionVote();
+
+  area.innerHTML = `
+    <div class="mission-slider-wrap">
+      <div class="mission-slider" id="mission-slider">
+        ${latestMissions.map(m => `
+          <div class="mission-slide" data-key="${m.key}">
+            <img class="mission-photo" src="${escapeHtml(m.photoUrl)}" alt="${escapeHtml(m.title)}">
+            <div class="mission-meta">
+              <div class="mission-team">${escapeHtml(m.team)}팀 미션</div>
+              <div class="mission-title">${escapeHtml(m.title)}</div>
+              <button type="button" class="vote-btn mission-vote-btn ${votedKey === m.key ? 'voted' : ''}" data-mission-key="${m.key}">
+                👍 이 사진에 투표 <span class="vote-count">${missionVotes[m.key] || 0}</span>
+              </button>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="mission-nav">
+        <button type="button" class="mission-arrow" id="mission-prev" aria-label="이전 사진">‹</button>
+        <span class="mission-count" id="mission-count">${currentMissionIndex + 1} / ${latestMissions.length}</span>
+        <button type="button" class="mission-arrow" id="mission-next" aria-label="다음 사진">›</button>
+      </div>
+      <button type="button" class="vote-cancel" id="mission-vote-cancel" style="display:${votedKey ? 'inline-flex' : 'none'};">투표 취소</button>
+    </div>`;
+
+  const slider = document.getElementById('mission-slider');
+  const scrollToIndex = (idx) => {
+    currentMissionIndex = Math.max(0, Math.min(idx, latestMissions.length - 1));
+    slider.scrollTo({left: slider.clientWidth * currentMissionIndex, behavior:'smooth'});
+    const count = document.getElementById('mission-count');
+    if(count) count.textContent = `${currentMissionIndex + 1} / ${latestMissions.length}`;
+  };
+  requestAnimationFrame(()=> slider.scrollTo({left: slider.clientWidth * currentMissionIndex, behavior:'auto'}));
+  document.getElementById('mission-prev').addEventListener('click', ()=> scrollToIndex(currentMissionIndex - 1));
+  document.getElementById('mission-next').addEventListener('click', ()=> scrollToIndex(currentMissionIndex + 1));
+  slider.addEventListener('scroll', ()=>{
+    if(!slider.clientWidth) return;
+    const idx = Math.round(slider.scrollLeft / slider.clientWidth);
+    if(idx !== currentMissionIndex){
+      currentMissionIndex = idx;
+      const count = document.getElementById('mission-count');
+      if(count) count.textContent = `${currentMissionIndex + 1} / ${latestMissions.length}`;
+    }
+  });
+
+  area.querySelectorAll('.mission-vote-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      const key = this.dataset.missionKey;
+      const prev = currentMissionVote();
+      if(prev === key) return;
+      if(prev){
+        db.ref(ROOT + '/teamMissionVotes/' + prev).transaction(v => Math.max((v || 0) - 1, 0));
+      }
+      db.ref(ROOT + '/teamMissionVotes/' + key).transaction(v => (v || 0) + 1);
+      localStorage.setItem('walk2026_teamMissionVote', key);
+      renderMissionVotes();
+    });
+  });
+
+  const cancel = document.getElementById('mission-vote-cancel');
+  if(cancel){
+    cancel.addEventListener('click', function(){
+      const prev = currentMissionVote();
+      if(prev){
+        db.ref(ROOT + '/teamMissionVotes/' + prev).transaction(v => Math.max((v || 0) - 1, 0));
+      }
+      localStorage.removeItem('walk2026_teamMissionVote');
+      renderMissionVotes();
+    });
+  }
+}
+
+db.ref(ROOT + '/teamMissions').on('value', snap => {
+  latestMissions = [];
+  snap.forEach(child => latestMissions.push({key: child.key, ...child.val()}));
+  latestMissions.sort((a,b)=> (Number(a.createdAt)||0) - (Number(b.createdAt)||0));
+  renderMissionVotes();
+});
+db.ref(ROOT + '/teamMissionVotes').on('value', snap => {
+  missionVotes = snap.val() || {};
+  renderMissionVotes();
+});
+
+// ---------- 소감 한마디 ----------
+document.getElementById('feedbackForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const againEl = document.querySelector('input[name="fb-again"]:checked');
+  const data = {
+    comment: document.getElementById('fb-comment').value.trim(),
+    idea: document.getElementById('fb-idea').value.trim(),
+    again: againEl ? againEl.value : '',
+    instagram: document.getElementById('fb-instagram').value.trim(),
+    createdAt: firebase.database.ServerValue.TIMESTAMP
+  };
+  db.ref(ROOT + '/feedback').push(data)
+    .then(()=>{
+      document.getElementById('feedbackForm').reset();
+      const msg = document.getElementById('feedback-success');
+      msg.style.display = 'block';
+      setTimeout(()=> msg.style.display = 'none', 5000);
+    })
+    .catch(err => alert('소감 제출 중 오류가 발생했습니다: ' + err.message));
 });
 
 // ---------- 저녁메뉴 투표 ----------
@@ -766,13 +1057,13 @@ db.ref(ROOT + '/menuVotes').on('value', snap => {
 function currentVote(){ return localStorage.getItem('walk2026_voted'); }
 function refreshVoteUI(){
   const voted = currentVote();
-  document.querySelectorAll('.vote-btn').forEach(b => {
+  document.querySelectorAll('#menu-vote .vote-btn').forEach(b => {
     b.classList.toggle('voted', b.dataset.option === voted);
   });
   const cancelBtn = document.getElementById('vote-cancel');
   if(cancelBtn) cancelBtn.style.display = voted ? 'inline-flex' : 'none';
 }
-document.querySelectorAll('.vote-btn').forEach(btn => {
+document.querySelectorAll('#menu-vote .vote-btn').forEach(btn => {
   btn.addEventListener('click', function(){
     const opt = this.dataset.option;
     const prev = currentVote();
@@ -838,6 +1129,7 @@ document.getElementById('adminLink').addEventListener('click', function(e){
     if(exit){
       sessionStorage.removeItem('isAdmin');
       document.getElementById('nav-admin').style.display = 'none';
+      document.getElementById('nav-apply').style.display = 'none';
       showTab('info');
     }
     return;
@@ -854,6 +1146,7 @@ document.getElementById('adminLink').addEventListener('click', function(e){
 });
 function unlockAdmin(){
   document.getElementById('nav-admin').style.display = 'inline-flex';
+  document.getElementById('nav-apply').style.display = 'inline-flex';
 }
 if(sessionStorage.getItem('isAdmin') === 'true') unlockAdmin();
 
@@ -871,6 +1164,7 @@ function applyRecordsSnapshot(snap){
   latestRecords = [];
   snap.forEach(child => { latestRecords.push({key: child.key, ...child.val()}); });
   renderAdminRecords();
+  renderRank();
 }
 db.ref(ROOT + '/participants').once('value').then(applyParticipantsSnapshot);
 db.ref(ROOT + '/participants').on('value', applyParticipantsSnapshot);
@@ -932,11 +1226,9 @@ function renderAdminRecords(){
     .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
     .map(r => `
       <tr>
-        <td>${escapeHtml(r.name)}</td>
+        <td>${escapeHtml(r.nickname || r.name || '')}</td>
         <td>${r.steps ?? ''}</td>
-        <td>${escapeHtml(r.pace)}</td>
-        <td>${escapeHtml(r.comment)}</td>
-        <td>${escapeHtml(r.again)}</td>
+        <td>${escapeHtml(r.pace || formatPace(r.paceSeconds))}</td>
         <td>${fmtDate(r.createdAt)}</td>
         <td><button type="button" class="del-btn" onclick="deleteRecord('${r.key}')">삭제</button></td>
       </tr>`).join('');
@@ -952,8 +1244,8 @@ function exportParticipantsCSV(){
   downloadCSV('참가자명단.csv', rows);
 }
 function exportRecordsCSV(){
-  const rows = [['이름','걸음수','소요시간/속도','소감','재참여의향','등록일시']];
-  latestRecords.forEach(r => rows.push([r.name, r.steps, r.pace, r.comment, r.again, fmtDate(r.createdAt)]));
+  const rows = [['닉네임','걸음수','평균페이스','등록일시']];
+  latestRecords.forEach(r => rows.push([r.nickname || r.name || '', r.steps, r.pace || formatPace(r.paceSeconds), fmtDate(r.createdAt)]));
   downloadCSV('걷기기록.csv', rows);
 }
 
